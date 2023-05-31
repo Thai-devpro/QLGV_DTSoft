@@ -47,9 +47,7 @@ public partial class DtsoftContext : DbContext
 
             entity.HasIndex(e => e.IdKhuvuc, "CO_FK");
 
-            entity.Property(e => e.IdBp)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_BP");
+            entity.Property(e => e.IdBp).HasColumnName("ID_BP");
             entity.Property(e => e.Congviecchuyenmon)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -74,9 +72,7 @@ public partial class DtsoftContext : DbContext
 
             entity.HasIndex(e => e.IdKh, "CO_CHI_TIEU_FK");
 
-            entity.Property(e => e.IdCt)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_CT");
+            entity.Property(e => e.IdCt).HasColumnName("ID_CT");
             entity.Property(e => e.Chitieu1)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -103,9 +99,7 @@ public partial class DtsoftContext : DbContext
 
             entity.ToTable("KE_HOACH_CONG_VIEC");
 
-            entity.Property(e => e.IdKhcv)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_KHCV");
+            entity.Property(e => e.IdKhcv).HasColumnName("ID_KHCV");
             entity.Property(e => e.Namthuchien)
                 .HasColumnType("datetime")
                 .HasColumnName("NAMTHUCHIEN");
@@ -125,9 +119,7 @@ public partial class DtsoftContext : DbContext
 
             entity.HasIndex(e => e.IdBp, "PHU_TRACH_FK");
 
-            entity.Property(e => e.IdKh)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_KH");
+            entity.Property(e => e.IdKh).HasColumnName("ID_KH");
             entity.Property(e => e.IdBp).HasColumnName("ID_BP");
             entity.Property(e => e.IdKhcv).HasColumnName("ID_KHCV");
             entity.Property(e => e.Motakh)
@@ -166,9 +158,7 @@ public partial class DtsoftContext : DbContext
 
             entity.ToTable("KHU_VUC");
 
-            entity.Property(e => e.IdKhuvuc)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_KHUVUC");
+            entity.Property(e => e.IdKhuvuc).HasColumnName("ID_KHUVUC");
             entity.Property(e => e.Diachi)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -198,9 +188,7 @@ public partial class DtsoftContext : DbContext
 
             entity.HasIndex(e => e.IdBp, "THUOC_FK");
 
-            entity.Property(e => e.IdNd)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_ND");
+            entity.Property(e => e.IdNd).HasColumnName("ID_ND");
             entity.Property(e => e.Diachi)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -253,9 +241,7 @@ public partial class DtsoftContext : DbContext
 
             entity.ToTable("QUYEN");
 
-            entity.Property(e => e.IdQuyen)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_QUYEN");
+            entity.Property(e => e.IdQuyen).HasColumnName("ID_QUYEN");
             entity.Property(e => e.Tenquyen)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -297,9 +283,7 @@ public partial class DtsoftContext : DbContext
 
             entity.ToTable("VAI_TRO");
 
-            entity.Property(e => e.IdVt)
-                .ValueGeneratedNever()
-                .HasColumnName("ID_VT");
+            entity.Property(e => e.IdVt).HasColumnName("ID_VT");
             entity.Property(e => e.Mota)
                 .HasMaxLength(255)
                 .IsUnicode(false)
