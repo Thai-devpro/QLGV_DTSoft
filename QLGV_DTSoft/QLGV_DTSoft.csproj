@@ -7,6 +7,91 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\ajax\index.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\ajax\index.mjs" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\array\inArray.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\array\range.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\array\zip.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\browser\browser.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\collection\forEach.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\collection\forEachArray.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\collection\forEachOwnProperties.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\collection\pluck.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\collection\toArray.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\customEvents\customEvents.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\defineClass\defineClass.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\dist\tui-code-snippet.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\getMouseButton.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\getMousePosition.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\getTarget.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\off.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\on.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\once.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\preventDefault.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\stopPropagation.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domEvent\_safeEvent.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\addClass.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\closest.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\css.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\disableTextSelection.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\enableTextSelection.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\getClass.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\getData.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\hasClass.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\matches.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\removeClass.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\removeData.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\removeElement.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\setData.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\template.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\toggleClass.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\_convertToKebabCase.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\_setClassName.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\domUtil\_testCSSProp.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\enum\enum.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\formatDate\formatDate.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\inheritance\createObject.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\inheritance\inherit.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\LICENSE" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\object\extend.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\object\pick.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\README.md" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\request\imagePing.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\request\sendHostname.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\string\decodeHTMLEntity.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\string\encodeHTMLEntity.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\tricks\debounce.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\tricks\throttle.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isArguments.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isArray.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isArraySafe.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isBoolean.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isBooleanSafe.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isDate.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isDateSafe.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isEmpty.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isExisty.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isFalsy.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isFunction.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isFunctionSafe.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isHTMLNode.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isHTMLTag.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isNotEmpty.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isNull.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isNumber.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isNumberSafe.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isObject.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isString.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isStringSafe.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isTruthy.js" />
+    <None Include="wwwroot\assets\vendor\tui-calendar\tui-time-picker\node_modules\tui-code-snippet\type\isUndefined.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">

@@ -1,0 +1,102 @@
+﻿@model IEnumerable<QLGV_DTSoft.Data.NguoiDung>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>
+    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
+</p>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Danh sách nhân viên</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatable" class="table data-table table-striped">
+                        <thead>
+                            <tr class="ligth">
+                                <th>
+                                    Tên tài khoản
+                                </th>
+                                
+                                <th>
+                                   Họ tên người dùng
+                                </th>
+                                <th>
+                                    Ngày sinh
+                                </th>
+                                <th>
+                                    Giới tính
+                                </th>
+                                <th>
+                                   Số điện thoại
+                                </th>
+                                <th>
+                                    Địa chỉ
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Bộ phận 
+                                </th>
+                                <th>
+                                    Vai trò
+                                </th>
+                                <th></th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tennguoidung)
+                                </td>
+                               
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Hoten)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Ngaysinh)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Gioitinh)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Sodienthoai)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Diachi)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IdVtNavigation.Tenvaitro)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.IdNd">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.IdNd">Details</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.IdNd">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
