@@ -27,9 +27,9 @@ public partial class NguoiDung
 
     public string? Email { get; set; }
 
-    public virtual BoPhan IdBpNavigation { get; set; } = null!;
+    public virtual BoPhan? IdBpNavigation { get; set; }
 
-    public virtual VaiTro IdVtNavigation { get; set; } = null!;
+    public virtual VaiTro? IdVtNavigation { get; set; }
 
     public virtual ICollection<ThamGium> ThamGia { get; set; } = new List<ThamGium>();
 }

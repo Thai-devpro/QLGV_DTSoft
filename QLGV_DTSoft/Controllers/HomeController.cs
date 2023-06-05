@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QLGV_DTSoft.Models;
+using System.Data;
 using System.Diagnostics;
 
 namespace QLGV_DTSoft.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,6 +16,7 @@ namespace QLGV_DTSoft.Controllers
             _logger = logger;
         }
 
+        
         public IActionResult Index()
         {
             return View();
