@@ -12,9 +12,28 @@
 </p>
 <div>
     <form asp-action="Index" method="get" class="form-inline">
-        <select name="IdKhcv" class="form-control" asp-items="@ViewBag.nth" onchange="this.form.submit()"></select>
+        <select name="NamthuchienFormatted" class="form-control" asp-items="@ViewBag.nth" onchange="this.form.submit()">
+            
+        </select>
     </form>
 </div>
+
+<script>
+    // Lấy thẻ select và đăng ký sự kiện onchange
+    var selectElement = document.querySelector('select[name="IdKhcv"]');
+    selectElement.addEventListener('change', function () {
+        // Lấy giá trị NamthuchienFormatted từ thuộc tính data-namthuchien của option được chọn
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var namthuchienFormatted = selectedOption.getAttribute('data-namthuchien');
+
+        // Gán giá trị NamthuchienFormatted cho input ẩn có tên là 'NamthuchienFormatted'
+        document.querySelector('input[name="NamthuchienFormatted"]').value = namthuchienFormatted;
+
+        // Gửi form đi
+        this.form.submit();
+    });
+</script>
+
 <table class="table">
     <thead>
         <tr>

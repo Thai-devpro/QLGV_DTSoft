@@ -5,7 +5,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using QLGV_DTSoft.Data;
 
 namespace QLGV_DTSoft.Controllers
@@ -22,21 +24,38 @@ namespace QLGV_DTSoft.Controllers
         }
 
         // GET: KeHoachCongViecs
-        public async Task<IActionResult> Index(int? IdKhcv)
+        public async Task<IActionResult> Index(string? NamthuchienFormatted)
         {
-            var nth = _context.KeHoachCongViecs.ToList();
-           
-           
-            
-            if (IdKhcv != null)
+            var nth = _context.KeHoachCongViecs
+                .Select(h => h.NamthuchienFormatted)
+                .Distinct()
+                .ToList();
+            var distinctNth = new List<string>();
+            distinctNth.Add("Tất cả");
+            foreach (var item in nth)
             {
-                ViewBag.nth = new SelectList(nth, "IdKhcv", "NamthuchienFormatted", IdKhcv);
-                var khcv = _context.KeHoachCongViecs.Where(h => h.IdKhcv == IdKhcv);
-                return View(await khcv.ToListAsync());
+                if (!distinctNth.Contains(item))
+                {
+                    distinctNth.Add(item);
+                }
             }
-            ViewBag.nth = new SelectList(nth, "IdKhcv", "NamthuchienFormatted", IdKhcv);
-            return View(nth);
+            if (!string.IsNullOrEmpty(NamthuchienFormatted) && NamthuchienFormatted != "Tất cả")
+            {
+                ViewBag.nth = new SelectList(distinctNth, NamthuchienFormatted);
+                var khcv = _context.KeHoachCongViecs
+                    .AsEnumerable()
+                    .Where(h => h.NamthuchienFormatted == NamthuchienFormatted)
+                    .ToList();
+                return View(khcv);
+            }
+
+            ViewBag.nth = new SelectList(distinctNth, NamthuchienFormatted);
+            var nth2 = _context.KeHoachCongViecs.ToList();
+            return View(nth2);
         }
+
+
+
 
         // GET: KeHoachCongViecs/Details/5
         public async Task<IActionResult> Details(int? id)
