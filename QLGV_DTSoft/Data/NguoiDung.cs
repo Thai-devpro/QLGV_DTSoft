@@ -7,9 +7,9 @@ public partial class NguoiDung
 {
     public int IdNd { get; set; }
 
-    public int IdVt { get; set; }
+    public int? IdVt { get; set; }
 
-    public int IdBp { get; set; }
+    public int? IdBp { get; set; }
 
     public string? Tennguoidung { get; set; }
 

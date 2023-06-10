@@ -1,0 +1,31 @@
+﻿@model QLGV_DTSoft.Data.KeHoachCongViec
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Chi tiết</h1>
+
+<div>
+    <h4>Kế hoạch công việc</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Năm thực hiện
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NamthuchienFormatted)
+        </dd>
+        <dt class = "col-sm-2">
+           Nội dung công việc
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Noidungcongviec)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdKhcv">Chỉnh sửa</a> |
+    <a asp-action="Index">Về danh sách</a>
+</div>

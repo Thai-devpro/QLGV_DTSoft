@@ -35,7 +35,7 @@ public partial class DtsoftContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-J0DDGD9P\\MSSQLSERVER16;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=LAMQUOCTHAI\\SQLEXPRESS;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,8 +104,7 @@ public partial class DtsoftContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("NAMTHUCHIEN");
             entity.Property(e => e.Noidungcongviec)
-                .HasMaxLength(255)
-                .IsUnicode(false)
+                .HasMaxLength(250)
                 .HasColumnName("NOIDUNGCONGVIEC");
         });
 
@@ -226,12 +225,10 @@ public partial class DtsoftContext : DbContext
 
             entity.HasOne(d => d.IdBpNavigation).WithMany(p => p.NguoiDungs)
                 .HasForeignKey(d => d.IdBp)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_NGUOI_DU_THUOC_BO_PHAN");
 
             entity.HasOne(d => d.IdVtNavigation).WithMany(p => p.NguoiDungs)
                 .HasForeignKey(d => d.IdVt)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_NGUOI_DU_CO_VAI_TR_VAI_TRO");
         });
 
