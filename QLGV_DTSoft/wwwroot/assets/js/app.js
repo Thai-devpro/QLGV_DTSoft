@@ -156,6 +156,7 @@ Index Of Script
   parents.parents("li").addClass("active");
   jQuery('li.active > a[aria-expanded="false"]').attr("aria-expanded", "true");
 
+
   /*---------------------------------------------------------------------
         FullScreen
         -----------------------------------------------------------------------*/

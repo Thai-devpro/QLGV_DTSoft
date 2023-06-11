@@ -1,0 +1,92 @@
+﻿@model IEnumerable<QLGV_DTSoft.Data.KeHoachGiaoViec>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Danh sách kế hoạch giao việc cho từng bộ phận</h1>
+<br />
+<p>
+    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
+</p>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                  
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatable" class="table data-table table-striped">
+                        <thead>
+                            <tr class="ligth">
+                                <th>
+                                    Tên kế hoạch
+                                </th>
+
+                                <th>
+                                    Ngày bắt đầu
+                                </th>
+                                <th>
+                                    Ngày kết thúc
+                                </th>
+                                <th>
+                                    Mô tả kế hoạch
+                                </th>
+                                <th>
+                                    Ngày tạo kế hoạch
+                                </th>
+                                <th>
+                                    Bộ phận phụ trách
+                                </th>
+                                <th>
+                                    Năm thực hiện
+                                </th>
+                                
+                                <th></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tenkehoach)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ngaybatdau)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ngayketthuc)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Motakh)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ngaytaokh)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdKhcvNavigation.NamthuchienFormatted)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.IdKh">Sửa</a> |
+                                        <a asp-action="Details" asp-route-id="@item.IdKh">Chi tiết</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.IdKh">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

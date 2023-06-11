@@ -35,7 +35,7 @@ public partial class DtsoftContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAMQUOCTHAI\\SQLEXPRESS;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-J0DDGD9P\\MSSQLSERVER16;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,12 +50,10 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdBp).HasColumnName("ID_BP");
             entity.Property(e => e.Congviecchuyenmon)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("CONGVIECCHUYENMON");
             entity.Property(e => e.IdKhuvuc).HasColumnName("ID_KHUVUC");
             entity.Property(e => e.Tenbophan)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("TENBOPHAN");
 
             entity.HasOne(d => d.IdKhuvucNavigation).WithMany(p => p.BoPhans)
@@ -75,16 +73,13 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdCt).HasColumnName("ID_CT");
             entity.Property(e => e.Chitieu1)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("CHITIEU");
             entity.Property(e => e.IdKh).HasColumnName("ID_KH");
             entity.Property(e => e.Motact)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("MOTACT");
             entity.Property(e => e.Tenchitieu)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("TENCHITIEU");
 
             entity.HasOne(d => d.IdKhNavigation).WithMany(p => p.ChiTieus)
@@ -104,7 +99,7 @@ public partial class DtsoftContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("NAMTHUCHIEN");
             entity.Property(e => e.Noidungcongviec)
-                .HasMaxLength(250)
+                .HasMaxLength(255)
                 .HasColumnName("NOIDUNGCONGVIEC");
         });
 
@@ -123,21 +118,18 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdKhcv).HasColumnName("ID_KHCV");
             entity.Property(e => e.Motakh)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("MOTAKH");
             entity.Property(e => e.Ngaybatdau)
-                .HasColumnType("datetime")
+                .HasColumnType("date")
                 .HasColumnName("NGAYBATDAU");
             entity.Property(e => e.Ngayketthuc)
-                .HasColumnType("datetime")
+                .HasColumnType("date")
                 .HasColumnName("NGAYKETTHUC");
             entity.Property(e => e.Ngaytaokh)
-                .IsRowVersion()
-                .IsConcurrencyToken()
+                .HasColumnType("date")
                 .HasColumnName("NGAYTAOKH");
             entity.Property(e => e.Tenkehoach)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("TENKEHOACH");
 
             entity.HasOne(d => d.IdBpNavigation).WithMany(p => p.KeHoachGiaoViecs)
@@ -160,11 +152,9 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdKhuvuc).HasColumnName("ID_KHUVUC");
             entity.Property(e => e.Diachi)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("DIACHI");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("EMAIL");
             entity.Property(e => e.Sodienthoai)
                 .HasMaxLength(12)
@@ -173,7 +163,6 @@ public partial class DtsoftContext : DbContext
                 .HasColumnName("SODIENTHOAI");
             entity.Property(e => e.Tenkhuvuc)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("TENKHUVUC");
         });
 
@@ -210,9 +199,15 @@ public partial class DtsoftContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("MATKHAU");
+            entity.Property(e => e.Ngaybatdaulam)
+                .HasColumnType("date")
+                .HasColumnName("NGAYBATDAULAM");
             entity.Property(e => e.Ngaysinh)
                 .HasColumnType("datetime")
                 .HasColumnName("NGAYSINH");
+            entity.Property(e => e.Quequan)
+                .HasMaxLength(255)
+                .HasColumnName("QUEQUAN");
             entity.Property(e => e.Sodienthoai)
                 .HasMaxLength(12)
                 .IsUnicode(false)
@@ -222,13 +217,18 @@ public partial class DtsoftContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("TENNGUOIDUNG");
+            entity.Property(e => e.Thamnien)
+                .HasColumnType("date")
+                .HasColumnName("THAMNIEN");
 
             entity.HasOne(d => d.IdBpNavigation).WithMany(p => p.NguoiDungs)
                 .HasForeignKey(d => d.IdBp)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_NGUOI_DU_THUOC_BO_PHAN");
 
             entity.HasOne(d => d.IdVtNavigation).WithMany(p => p.NguoiDungs)
                 .HasForeignKey(d => d.IdVt)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_NGUOI_DU_CO_VAI_TR_VAI_TRO");
         });
 
@@ -241,7 +241,6 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdQuyen).HasColumnName("ID_QUYEN");
             entity.Property(e => e.Tenquyen)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("TENQUYEN");
         });
 
@@ -258,8 +257,7 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdNd).HasColumnName("ID_ND");
             entity.Property(e => e.IdKh).HasColumnName("ID_KH");
             entity.Property(e => e.Danhgia)
-                .HasMaxLength(10)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasColumnName("DANHGIA");
             entity.Property(e => e.SlHoanthanh).HasColumnName("SL_HOANTHANH");
 
@@ -283,11 +281,9 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdVt).HasColumnName("ID_VT");
             entity.Property(e => e.Mota)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("MOTA");
             entity.Property(e => e.Tenvaitro)
                 .HasMaxLength(100)
-                .IsUnicode(false)
                 .HasColumnName("TENVAITRO");
 
             entity.HasMany(d => d.IdQuyens).WithMany(p => p.IdVts)

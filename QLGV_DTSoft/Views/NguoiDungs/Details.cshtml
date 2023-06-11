@@ -5,75 +5,87 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1>Thông tin chi tiết người dùng</h1>
 
 <div>
-    <h4>NguoiDung</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tennguoidung)
+            Tên tài khoản
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Tennguoidung)
         </dd>
+        
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Matkhau)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Matkhau)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hoten)
+           Họ và tên
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Hoten)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ngaysinh)
+            Ngày sinh
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Ngaysinh)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gioitinh)
+            Giới tính
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Gioitinh)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sodienthoai)
+            Số điện thoại
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Sodienthoai)
         </dd>
+        <dt class="col-sm-2">
+            Quê quán
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Quequan)
+        </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Diachi)
+            Địa chỉ
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Diachi)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+            Email
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdBpNavigation)
+            Bộ phận làm việc
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdBpNavigation.IdBp)
+            @Html.DisplayFor(model => model.IdBpNavigation.Tenbophan)
+        </dd>
+        <dt class="col-sm-2">
+            Ngày bắt đầu làm việc
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ngaybatdaulam)
+        </dd>
+        <dt class="col-sm-2">
+            Thâm niên
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Thamnien)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdVtNavigation)
+           Vai trò
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdVtNavigation.IdVt)
+            @Html.DisplayFor(model => model.IdVtNavigation.Tenvaitro)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdNd">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.IdNd">Chỉnh sửa</a> |
+    <a asp-action="Index">Trở về danh sách</a>
 </div>

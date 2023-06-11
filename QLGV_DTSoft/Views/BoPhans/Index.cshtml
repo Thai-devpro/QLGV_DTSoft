@@ -1,0 +1,65 @@
+﻿@model IEnumerable<QLGV_DTSoft.Data.BoPhan>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Danh sách các bộ phận có trong hệ thống</h1>
+<br />
+<p>
+    <a asp-action="Create" class="btn btn-success">Thêm mới bộ phận</a>
+</p>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Danh sách bộ phận</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatable" class="table data-table table-striped">
+                        <thead>
+                            <tr class="ligth">
+                                <th>
+                                    Tên bộ phận
+                                </th>
+
+                                <th>
+                                    Công việc chuyên môn
+                                </th>
+                                <th>
+                                    Thuộc khu vực
+                                </th>
+                                <th></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tenbophan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Congviecchuyenmon)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdKhuvucNavigation.Tenkhuvuc)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdBp">Sửa</a> |
+                <a asp-action="Details" asp-route-id="@item.IdBp">Chi tiết</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdBp">Xóa</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

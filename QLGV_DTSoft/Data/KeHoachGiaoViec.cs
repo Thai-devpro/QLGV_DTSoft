@@ -19,13 +19,13 @@ public partial class KeHoachGiaoViec
 
     public string? Motakh { get; set; }
 
-    public byte[]? Ngaytaokh { get; set; }
+    public DateTime? Ngaytaokh { get; set; }
 
     public virtual ICollection<ChiTieu> ChiTieus { get; set; } = new List<ChiTieu>();
 
-    public virtual BoPhan IdBpNavigation { get; set; } = null!;
+    public virtual BoPhan? IdBpNavigation { get; set; }
 
-    public virtual KeHoachCongViec IdKhcvNavigation { get; set; } = null!;
+    public virtual KeHoachCongViec? IdKhcvNavigation { get; set; }
 
     public virtual ICollection<ThamGium> ThamGia { get; set; } = new List<ThamGium>();
 }
