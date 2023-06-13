@@ -4,6 +4,8 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h1>Danh sách nhân viên</h1>
+<br />
 <p>
     <a asp-action="Create" class="btn btn-success">Thêm mới</a>
 </p>
@@ -27,27 +29,11 @@
                                 <th>
                                    Họ tên người dùng
                                 </th>
+                                
                                 <th>
-                                    Ngày sinh
+                                    Bộ phận làm việc
                                 </th>
-                                <th>
-                                    Giới tính
-                                </th>
-                                <th>
-                                   Số điện thoại
-                                </th>
-                                <th>
-                                    Địa chỉ
-                                </th>
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Bộ phận 
-                                </th>
-                                <th>
-                                    Vai trò
-                                </th>
+                                
                                 <th></th>
                             </tr>
                             
@@ -63,31 +49,15 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Hoten)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Ngaysinh)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Gioitinh)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Sodienthoai)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Diachi)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
+                               
                                 <td>
                                     @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
                                 </td>
+                               
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.IdVtNavigation.Tenvaitro)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.IdNd">Edit</a> |
-                                    <a asp-action="Details" asp-route-id="@item.IdNd">Details</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.IdNd">Delete</a>
+                                    <a asp-action="Edit" asp-route-id="@item.IdNd">Sửa</a> |
+                                    <a asp-action="Details" asp-route-id="@item.IdNd">Thông tin chi tiết</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.IdNd">Xóa</a>
                                 </td>
                             </tr>
                         }

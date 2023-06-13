@@ -1,0 +1,42 @@
+﻿@model QLGV_DTSoft.Data.BoPhan
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Thêm bộ phận mới</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">               
+                <label asp-for="IdKhuvuc" class="control-label">Khu vực</label>
+                <select asp-for="IdKhuvuc" class ="form-control" asp-items="ViewBag.IdKhuvuc"></select>
+                 <span asp-validation-for="IdKhuvuc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tenbophan" class="control-label">Tên bộ phận</label>
+                <input asp-for="Tenbophan" class="form-control" />
+                <span asp-validation-for="Tenbophan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Congviecchuyenmon" class="control-label">Công việc chuyên môn</label>
+                <input asp-for="Congviecchuyenmon" class="form-control" />
+                <span asp-validation-for="Congviecchuyenmon" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Trở lại danh sách</a>
+</div>
+@*
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}*@

@@ -1,0 +1,60 @@
+﻿@model QLGV_DTSoft.Data.KeHoachGiaoViec
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Kế hoạch giao việc</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdBp" class="control-label">Bộ phận phụ trách</label>
+                <select asp-for="IdBp" class ="form-control" asp-items="ViewBag.IdBp"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdKhcv" class="control-label">Năm thực hiện</label>
+                <select asp-for="IdKhcv" class ="form-control" asp-items="ViewBag.IdKhcv"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tenkehoach" class="control-label">Tên kế hoạch</label>
+                <input asp-for="Tenkehoach" class="form-control" />
+                <span asp-validation-for="Tenkehoach" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ngaybatdau" class="control-label">Ngày bắt đầu</label>
+                <input asp-for="Ngaybatdau" class="form-control" />
+                <span asp-validation-for="Ngaybatdau" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ngayketthuc" class="control-label">Ngày kết thúc</label>
+                <input asp-for="Ngayketthuc" class="form-control" />
+                <span asp-validation-for="Ngayketthuc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Motakh" class="control-label">Mô tả kế hoạch</label>
+                <input asp-for="Motakh" class="form-control" />
+                <span asp-validation-for="Motakh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ngaytaokh" class="control-label">Ngày tạo</label>
+                <input asp-for="Ngaytaokh" value="@DateTime.Now" type="datetime" class="form-control" />
+                <span asp-validation-for="Ngaytaokh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm mới" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Trở về danh sách</a>
+</div>
+
+@*@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}*@

@@ -1,0 +1,61 @@
+﻿@model QLGV_DTSoft.Data.KeHoachGiaoViec
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>Bạn có chắc muốn xóa kế hoạch "@Model.Tenkehoach"?</h3>
+<div>
+    
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+           Tên kế hoạch
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Tenkehoach)
+        </dd>
+        <dt class = "col-sm-2">
+           Ngày bắt đầu
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ngaybatdau)
+        </dd>
+        <dt class = "col-sm-2">
+            Ngày kết thúc
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ngayketthuc)
+        </dd>
+        <dt class = "col-sm-2">
+            Mô tả kế hoạch
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Motakh)
+        </dd>
+        <dt class = "col-sm-2">
+            Ngày tạo kế hoạch
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ngaytaokh)
+        </dd>
+        <dt class = "col-sm-2">
+            Bộ phận phụ trách
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdBpNavigation.Tenbophan)
+        </dd>
+        <dt class = "col-sm-2">
+            Năm thực hiện
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdKhcvNavigation.NamthuchienFormatted)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="IdKh" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Trở về danh sách</a>
+    </form>
+</div>
