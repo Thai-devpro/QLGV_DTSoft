@@ -9,5 +9,5 @@ public partial class Quyen
 
     public string? Tenquyen { get; set; }
 
-    public virtual ICollection<VaiTro> IdVts { get; set; } = new List<VaiTro>();
+    public virtual ICollection<CoQuyenTruyCap> CoQuyenTruyCaps { get; set; } = new List<CoQuyenTruyCap>();
 }

@@ -23,9 +23,9 @@ public partial class KeHoachGiaoViec
 
     public virtual ICollection<ChiTieu> ChiTieus { get; set; } = new List<ChiTieu>();
 
-    public virtual BoPhan? IdBpNavigation { get; set; }
+    public virtual BoPhan IdBpNavigation { get; set; } = null!;
 
-    public virtual KeHoachCongViec? IdKhcvNavigation { get; set; }
+    public virtual KeHoachCongViec IdKhcvNavigation { get; set; } = null!;
 
     public virtual ICollection<ThamGium> ThamGia { get; set; } = new List<ThamGium>();
 }

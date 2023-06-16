@@ -19,6 +19,8 @@ public partial class DtsoftContext : DbContext
 
     public virtual DbSet<ChiTieu> ChiTieus { get; set; }
 
+    public virtual DbSet<CoQuyenTruyCap> CoQuyenTruyCaps { get; set; }
+
     public virtual DbSet<KeHoachCongViec> KeHoachCongViecs { get; set; }
 
     public virtual DbSet<KeHoachGiaoViec> KeHoachGiaoViecs { get; set; }
@@ -35,7 +37,7 @@ public partial class DtsoftContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-J0DDGD9P\\MSSQLSERVER16;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=LamQuocThai\\SQLEXPRESS01;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,6 +88,31 @@ public partial class DtsoftContext : DbContext
                 .HasForeignKey(d => d.IdKh)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CHI_TIEU_CO_CHI_TI_KE_HOACH");
+        });
+
+        modelBuilder.Entity<CoQuyenTruyCap>(entity =>
+        {
+            entity.HasKey(e => e.IdQuyentc);
+
+            entity.ToTable("CO_QUYEN_TRUY_CAP");
+
+            entity.HasIndex(e => e.IdQuyen, "CO_QUYEN_TRUY_CAP2_FK");
+
+            entity.HasIndex(e => e.IdVt, "CO_QUYEN_TRUY_CAP_FK");
+
+            entity.Property(e => e.IdQuyentc).HasColumnName("ID_QUYENTC");
+            entity.Property(e => e.IdQuyen).HasColumnName("ID_QUYEN");
+            entity.Property(e => e.IdVt).HasColumnName("ID_VT");
+
+            entity.HasOne(d => d.IdQuyenNavigation).WithMany(p => p.CoQuyenTruyCaps)
+                .HasForeignKey(d => d.IdQuyen)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CO_QUYEN_CO_QUYEN__QUYEN");
+
+            entity.HasOne(d => d.IdVtNavigation).WithMany(p => p.CoQuyenTruyCaps)
+                .HasForeignKey(d => d.IdVt)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CO_QUYEN_CO_QUYEN__VAI_TRO");
         });
 
         modelBuilder.Entity<KeHoachCongViec>(entity =>
@@ -179,7 +206,6 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.IdNd).HasColumnName("ID_ND");
             entity.Property(e => e.Diachi)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("DIACHI");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
@@ -191,7 +217,6 @@ public partial class DtsoftContext : DbContext
                 .HasColumnName("GIOITINH");
             entity.Property(e => e.Hoten)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("HOTEN");
             entity.Property(e => e.IdBp).HasColumnName("ID_BP");
             entity.Property(e => e.IdVt).HasColumnName("ID_VT");
@@ -203,7 +228,7 @@ public partial class DtsoftContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("NGAYBATDAULAM");
             entity.Property(e => e.Ngaysinh)
-                .HasColumnType("datetime")
+                .HasColumnType("date")
                 .HasColumnName("NGAYSINH");
             entity.Property(e => e.Quequan)
                 .HasMaxLength(255)
@@ -217,19 +242,17 @@ public partial class DtsoftContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("TENNGUOIDUNG");
-            entity.Property(e => e.Thamnien)
-                .HasColumnType("date")
-                .HasColumnName("THAMNIEN");
+            entity.Property(e => e.Thamnien).HasColumnName("THAMNIEN");
 
             entity.HasOne(d => d.IdBpNavigation).WithMany(p => p.NguoiDungs)
                 .HasForeignKey(d => d.IdBp)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_NGUOI_DU_THUOC_BO_PHAN");
+                .HasConstraintName("FK_NGUOI_DUNG_BO_PHAN");
 
             entity.HasOne(d => d.IdVtNavigation).WithMany(p => p.NguoiDungs)
                 .HasForeignKey(d => d.IdVt)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_NGUOI_DU_CO_VAI_TR_VAI_TRO");
+                .HasConstraintName("FK_NGUOI_DUNG_VAI_TRO");
         });
 
         modelBuilder.Entity<Quyen>(entity =>
@@ -285,27 +308,6 @@ public partial class DtsoftContext : DbContext
             entity.Property(e => e.Tenvaitro)
                 .HasMaxLength(100)
                 .HasColumnName("TENVAITRO");
-
-            entity.HasMany(d => d.IdQuyens).WithMany(p => p.IdVts)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CoQuyenTruyCap",
-                    r => r.HasOne<Quyen>().WithMany()
-                        .HasForeignKey("IdQuyen")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_CO_QUYEN_CO_QUYEN__QUYEN"),
-                    l => l.HasOne<VaiTro>().WithMany()
-                        .HasForeignKey("IdVt")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_CO_QUYEN_CO_QUYEN__VAI_TRO"),
-                    j =>
-                    {
-                        j.HasKey("IdVt", "IdQuyen");
-                        j.ToTable("CO_QUYEN_TRUY_CAP");
-                        j.HasIndex(new[] { "IdQuyen" }, "CO_QUYEN_TRUY_CAP2_FK");
-                        j.HasIndex(new[] { "IdVt" }, "CO_QUYEN_TRUY_CAP_FK");
-                        j.IndexerProperty<int>("IdVt").HasColumnName("ID_VT");
-                        j.IndexerProperty<int>("IdQuyen").HasColumnName("ID_QUYEN");
-                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

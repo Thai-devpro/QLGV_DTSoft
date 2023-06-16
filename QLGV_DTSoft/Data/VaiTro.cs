@@ -11,7 +11,7 @@ public partial class VaiTro
 
     public string? Mota { get; set; }
 
-    public virtual ICollection<NguoiDung> NguoiDungs { get; set; } = new List<NguoiDung>();
+    public virtual ICollection<CoQuyenTruyCap> CoQuyenTruyCaps { get; set; } = new List<CoQuyenTruyCap>();
 
-    public virtual ICollection<Quyen> IdQuyens { get; set; } = new List<Quyen>();
+    public virtual ICollection<NguoiDung> NguoiDungs { get; set; } = new List<NguoiDung>();
 }

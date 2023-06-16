@@ -9,90 +9,87 @@ using QLGV_DTSoft.Data;
 
 namespace QLGV_DTSoft.Controllers
 {
-    public class BoPhansController : Controller
+    public class KhuVucsController : Controller
     {
         private readonly DtsoftContext _context;
 
-        public BoPhansController(DtsoftContext context)
+        public KhuVucsController(DtsoftContext context)
         {
             _context = context;
         }
 
-        // GET: BoPhans
+        // GET: KhuVucs
         public async Task<IActionResult> Index()
         {
-            var dtsoftContext = _context.BoPhans.Include(b => b.IdKhuvucNavigation);
-            return View(await dtsoftContext.ToListAsync());
+              return _context.KhuVucs != null ? 
+                          View(await _context.KhuVucs.ToListAsync()) :
+                          Problem("Entity set 'DtsoftContext.KhuVucs'  is null.");
         }
 
-        // GET: BoPhans/Details/5
+        // GET: KhuVucs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.BoPhans == null)
+            if (id == null || _context.KhuVucs == null)
             {
                 return NotFound();
             }
 
-            var boPhan = await _context.BoPhans
-                .Include(b => b.IdKhuvucNavigation)
-                .FirstOrDefaultAsync(m => m.IdBp == id);
-            if (boPhan == null)
+            var khuVuc = await _context.KhuVucs
+                .FirstOrDefaultAsync(m => m.IdKhuvuc == id);
+            if (khuVuc == null)
             {
                 return NotFound();
             }
 
-            return View(boPhan);
+            return View(khuVuc);
         }
 
-        // GET: BoPhans/Create
+        // GET: KhuVucs/Create
         public IActionResult Create()
         {
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "Tenkhuvuc");
             return View();
         }
 
-        // POST: BoPhans/Create
+        // POST: KhuVucs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdBp,IdKhuvuc,Tenbophan,Congviecchuyenmon")] BoPhan boPhan)
+        public async Task<IActionResult> Create([Bind("IdKhuvuc,Tenkhuvuc,Diachi,Email,Sodienthoai")] KhuVuc khuVuc)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(boPhan);
+                _context.Add(khuVuc);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "Tenkhuvuc", boPhan.IdKhuvuc);
-            return View(boPhan);
+            return View(khuVuc);
         }
 
-        // GET: BoPhans/Edit/5
+        // GET: KhuVucs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.BoPhans == null)
+            if (id == null || _context.KhuVucs == null)
             {
                 return NotFound();
             }
 
-            var boPhan = await _context.BoPhans.FindAsync(id);
-            if (boPhan == null)
+            var khuVuc = await _context.KhuVucs.FindAsync(id);
+            if (khuVuc == null)
             {
                 return NotFound();
             }
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "IdKhuvuc", boPhan.IdKhuvuc);
-            return View(boPhan);
+            return View(khuVuc);
         }
 
-        // POST: BoPhans/Edit/5
+        // POST: KhuVucs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdBp,IdKhuvuc,Tenbophan,Congviecchuyenmon")] BoPhan boPhan)
+        public async Task<IActionResult> Edit(int id, [Bind("IdKhuvuc,Tenkhuvuc,Diachi,Email,Sodienthoai")] KhuVuc khuVuc)
         {
-            if (id != boPhan.IdBp)
+            if (id != khuVuc.IdKhuvuc)
             {
                 return NotFound();
             }
@@ -101,12 +98,12 @@ namespace QLGV_DTSoft.Controllers
             {
                 try
                 {
-                    _context.Update(boPhan);
+                    _context.Update(khuVuc);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BoPhanExists(boPhan.IdBp))
+                    if (!KhuVucExists(khuVuc.IdKhuvuc))
                     {
                         return NotFound();
                     }
@@ -117,51 +114,49 @@ namespace QLGV_DTSoft.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "IdKhuvuc", boPhan.IdKhuvuc);
-            return View(boPhan);
+            return View(khuVuc);
         }
 
-        // GET: BoPhans/Delete/5
+        // GET: KhuVucs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.BoPhans == null)
+            if (id == null || _context.KhuVucs == null)
             {
                 return NotFound();
             }
 
-            var boPhan = await _context.BoPhans
-                .Include(b => b.IdKhuvucNavigation)
-                .FirstOrDefaultAsync(m => m.IdBp == id);
-            if (boPhan == null)
+            var khuVuc = await _context.KhuVucs
+                .FirstOrDefaultAsync(m => m.IdKhuvuc == id);
+            if (khuVuc == null)
             {
                 return NotFound();
             }
 
-            return View(boPhan);
+            return View(khuVuc);
         }
 
-        // POST: BoPhans/Delete/5
+        // POST: KhuVucs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.BoPhans == null)
+            if (_context.KhuVucs == null)
             {
-                return Problem("Entity set 'DtsoftContext.BoPhans'  is null.");
+                return Problem("Entity set 'DtsoftContext.KhuVucs'  is null.");
             }
-            var boPhan = await _context.BoPhans.FindAsync(id);
-            if (boPhan != null)
+            var khuVuc = await _context.KhuVucs.FindAsync(id);
+            if (khuVuc != null)
             {
-                _context.BoPhans.Remove(boPhan);
+                _context.KhuVucs.Remove(khuVuc);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BoPhanExists(int id)
+        private bool KhuVucExists(int id)
         {
-          return (_context.BoPhans?.Any(e => e.IdBp == id)).GetValueOrDefault();
+          return (_context.KhuVucs?.Any(e => e.IdKhuvuc == id)).GetValueOrDefault();
         }
     }
 }

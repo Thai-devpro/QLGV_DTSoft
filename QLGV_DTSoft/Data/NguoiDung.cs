@@ -31,7 +31,7 @@ public partial class NguoiDung
 
     public DateTime? Ngaybatdaulam { get; set; }
 
-    public DateTime? Thamnien { get; set; }
+    public double? Thamnien { get; set; }
 
     public virtual BoPhan IdBpNavigation { get; set; } = null!;
 

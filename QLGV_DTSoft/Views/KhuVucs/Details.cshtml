@@ -1,0 +1,43 @@
+﻿@model QLGV_DTSoft.Data.KhuVuc
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Chi tiết</h1>
+
+<div>
+    <h4>Khu vực</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+           Tên khu vực
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Tenkhuvuc)
+        </dd>
+        <dt class = "col-sm-2">
+           Địa chỉ
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Diachi)
+        </dd>
+        <dt class = "col-sm-2">
+           Email
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+           Số điện thoại
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Sodienthoai)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdKhuvuc">Chỉnh sửa</a> |
+    <a asp-action="Index">Về danh sách</a>
+</div>

@@ -58,7 +58,11 @@ namespace QLGV_DTSoft.Controllers.Auth
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
+                    var user = await _context.NguoiDungs.FirstOrDefaultAsync(u => u.Tennguoidung == loginViewModel.Tennguoidung);
 
+                    HttpContext.Session.SetString("tennd", user.Hoten);
+                    HttpContext.Session.SetInt32("idnd", user.IdNd);
+                    HttpContext.Session.SetInt32("vaitro", user.IdVt);
                     return LocalRedirect(loginViewModel.ReturnUrl);
                 }
                 else
@@ -89,7 +93,7 @@ namespace QLGV_DTSoft.Controllers.Auth
         {
             
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-          
+            HttpContext.Session.Clear();
             return LocalRedirect("/");
         }
 
