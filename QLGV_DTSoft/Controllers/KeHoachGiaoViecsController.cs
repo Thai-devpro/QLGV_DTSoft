@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using QLGV_DTSoft.Data;
 
 namespace QLGV_DTSoft.Controllers
@@ -36,6 +37,7 @@ namespace QLGV_DTSoft.Controllers
             var keHoachGiaoViec = await _context.KeHoachGiaoViecs
                 .Include(k => k.IdBpNavigation)
                 .Include(k => k.IdKhcvNavigation)
+                .Include(k => k.ChiTieus)
                 .FirstOrDefaultAsync(m => m.IdKh == id);
             if (keHoachGiaoViec == null)
             {
@@ -58,18 +60,29 @@ namespace QLGV_DTSoft.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdKh,IdBp,IdKhcv,Tenkehoach,Ngaybatdau,Ngayketthuc,Motakh,Ngaytaokh")] KeHoachGiaoViec keHoachGiaoViec)
+        public async Task<IActionResult> Create([Bind("IdKh,IdBp,IdKhcv,Tenkehoach,Ngaybatdau,Ngayketthuc,Motakh,Ngaytaokh")] KeHoachGiaoViec keHoachGiaoViec, string chitieuList)
         {
             if (ModelState.IsValid)
             {
+                // Deserialize danh sách chỉ tiêu từ chuỗi JSON
+                List<ChiTieu> chiTieus = JsonConvert.DeserializeObject<List<ChiTieu>>(chitieuList);
+
+                // Gán danh sách chỉ tiêu cho kế hoạch giao việc
+                keHoachGiaoViec.ChiTieus = chiTieus;
+
+                // Lưu kế hoạch giao việc và danh sách chỉ tiêu vào database
                 _context.Add(keHoachGiaoViec);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
             ViewData["IdKhcv"] = new SelectList(_context.KeHoachCongViecs, "IdKhcv", "NamthuchienFormatted", keHoachGiaoViec.IdKhcv);
+
             return View(keHoachGiaoViec);
         }
+
 
         // GET: KeHoachGiaoViecs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -79,7 +92,11 @@ namespace QLGV_DTSoft.Controllers
                 return NotFound();
             }
 
-            var keHoachGiaoViec = await _context.KeHoachGiaoViecs.FindAsync(id);
+            
+            var keHoachGiaoViec = await _context.KeHoachGiaoViecs
+                
+                .Include(k => k.ChiTieus)
+                .FirstOrDefaultAsync(m => m.IdKh == id);
             if (keHoachGiaoViec == null)
             {
                 return NotFound();
@@ -94,7 +111,7 @@ namespace QLGV_DTSoft.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdKh,IdBp,IdKhcv,Tenkehoach,Ngaybatdau,Ngayketthuc,Motakh,Ngaytaokh")] KeHoachGiaoViec keHoachGiaoViec)
+        public async Task<IActionResult> Edit(int id, [Bind("IdKh,IdBp,IdKhcv,Tenkehoach,Ngaybatdau,Ngayketthuc,Motakh,Ngaytaokh")] KeHoachGiaoViec keHoachGiaoViec, string chitieuList)
         {
             if (id != keHoachGiaoViec.IdKh)
             {
@@ -105,8 +122,34 @@ namespace QLGV_DTSoft.Controllers
             {
                 try
                 {
+                    // Deserialize danh sách chỉ tiêu từ chuỗi JSON
+                    List<ChiTieu> chiTieus = JsonConvert.DeserializeObject<List<ChiTieu>>(chitieuList);
+
+                    // Lấy danh sách các chỉ tiêu hiện có trong kế hoạch giao việc
+                    List<ChiTieu> existingChiTieus = _context.ChiTieus.Where(c => c.IdKh == keHoachGiaoViec.IdKh).ToList();
+
+                    // Cập nhật thông tin các chỉ tiêu
+                    foreach (var chitieu in chiTieus)
+                    {
+                        // Kiểm tra xem chỉ tiêu đã tồn tại trong danh sách hiện có hay chưa
+                        var existingChitieu = existingChiTieus.FirstOrDefault(c => c.IdCt == chitieu.IdCt);
+
+                        if (existingChitieu != null)
+                        {
+                            // Cập nhật các thuộc tính của chỉ tiêu đã tồn tại
+                            existingChitieu.Tenchitieu = chitieu.Tenchitieu;
+                            existingChitieu.Chitieu1 = chitieu.Chitieu1;
+                            existingChitieu.Motact = chitieu.Motact;
+
+                            _context.Update(existingChitieu);
+                        }
+                    }
+
+                    // Cập nhật thông tin kế hoạch giao việc
                     _context.Update(keHoachGiaoViec);
+
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,10 +164,14 @@ namespace QLGV_DTSoft.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
             ViewData["IdKhcv"] = new SelectList(_context.KeHoachCongViecs, "IdKhcv", "NamthuchienFormatted", keHoachGiaoViec.IdKhcv);
             return View(keHoachGiaoViec);
         }
+
+
+
 
         // GET: KeHoachGiaoViecs/Delete/5
         public async Task<IActionResult> Delete(int? id)

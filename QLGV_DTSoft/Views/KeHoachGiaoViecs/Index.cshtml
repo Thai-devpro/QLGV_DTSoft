@@ -1,12 +1,9 @@
 ﻿@model IEnumerable<QLGV_DTSoft.Data.KeHoachGiaoViec>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Danh sách kế hoạch giao việc cho từng bộ phận</h1>
-<br />
 <p>
     <a asp-action="Create" class="btn btn-success">Thêm mới</a>
 </p>
@@ -33,12 +30,8 @@
                                 <th>
                                     Ngày kết thúc
                                 </th>
-                                <th>
-                                    Mô tả kế hoạch
-                                </th>
-                                <th>
-                                    Ngày tạo kế hoạch
-                                </th>
+                                
+                               
                                 <th>
                                     Bộ phận phụ trách
                                 </th>
@@ -63,12 +56,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Ngayketthuc)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Motakh)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Ngaytaokh)
-                                    </td>
+                                    
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
                                     </td>
@@ -90,3 +78,4 @@
         </div>
     </div>
 </div>
+

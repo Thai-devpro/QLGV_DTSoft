@@ -1,65 +1,151 @@
 ﻿@model QLGV_DTSoft.Data.KeHoachGiaoViec
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Chỉnh sửa kế hoạch giao việc</h1>
-
-
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            <h4 class="card-title">Chỉnh sửa kế hoạch giao việc có ID: @Model.IdKh</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" onsubmit="sendDataToController()" id="editForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdKh" />
-            <div class="form-group">
-                <label asp-for="IdBp" class="control-label">Bộ phận phụ trách</label>
-                <select asp-for="IdBp" class="form-control" asp-items="ViewBag.IdBp"></select>
-                <span asp-validation-for="IdBp" class="text-danger"></span>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="IdBp" class="control-label">Bộ phận phụ trách</label>
+                    <select asp-for="IdBp" class="form-control" asp-items="ViewBag.IdBp"></select>
+                </div>
+                <div class="col">
+                    <label asp-for="IdKhcv" class="control-label">Năm thực hiện</label>
+                    <select asp-for="IdKhcv" class="form-control" asp-items="ViewBag.IdKhcv"></select>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="IdKhcv" class="control-label">Năm thực hiện kế hoạch</label>
-                <select asp-for="IdKhcv" class="form-control" asp-items="ViewBag.IdKhcv"></select>
-                <span asp-validation-for="IdKhcv" class="text-danger"></span>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Tenkehoach" class="control-label">Tên kế hoạch</label>
+                    <input asp-for="Tenkehoach" class="form-control" placeholder="Nhập tên kế hoạch" />
+                    <span asp-validation-for="Tenkehoach" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Ngaytaokh" class="control-label">Ngày tạo kế hoạch</label>
+                    <input asp-for="Ngaytaokh" value="@DateTime.Now" type="datetime" class="form-control" />
+                    <span asp-validation-for="Ngaytaokh" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Tenkehoach" class="control-label">Tên kế hoạch</label>
-                <input asp-for="Tenkehoach" class="form-control" />
-                <span asp-validation-for="Tenkehoach" class="text-danger"></span>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Ngaybatdau" class="control-label">Ngày bắt đầu</label>
+                    <input asp-for="Ngaybatdau" class="form-control" />
+                    <span asp-validation-for="Ngaybatdau" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Ngayketthuc" class="control-label">Ngày kết thúc</label>
+                    <input asp-for="Ngayketthuc" class="form-control" />
+                    <span asp-validation-for="Ngayketthuc" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Ngaybatdau" class="control-label">Ngày bắt đầu</label>
-                <input asp-for="Ngaybatdau" class="form-control" />
-                <span asp-validation-for="Ngaybatdau" class="text-danger"></span>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Motakh" class="control-label">Mô tả kế hoạch</label>
+                    <textarea asp-for="Motakh" class="form-control"></textarea>
+                    <span asp-validation-for="Motakh" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Ngayketthuc" class="control-label">Ngày kết thúc</label>
-                <input asp-for="Ngayketthuc" class="form-control" />
-                <span asp-validation-for="Ngayketthuc" class="text-danger"></span>
+            <div class="row">
+                <div class="col-4">
+                    <label class="control-label">Tên chỉ tiêu</label>
+                </div>
+                <div class="col-4">
+                    <label class="control-label">Chỉ tiêu</label>
+                </div>
+                <div class="col-4">
+                    <label class="control-label">Miêu tả</label>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Motakh" class="control-label">Mô tả kế hoạch</label>
-                <input asp-for="Motakh" class="form-control" />
-                <span asp-validation-for="Motakh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ngaytaokh" class="control-label">Ngày tạo kế hoạch</label>
-                <input asp-for="Ngaytaokh" class="form-control" />
-                <span asp-validation-for="Ngaytaokh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Lưu" class="btn btn-success" />
-            </div>
+
+            @foreach (var chitieu in Model.ChiTieus)
+            {
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input class="form-control" type="hidden" name="chitieuList[@chitieu.IdCt].IdCt" value="@chitieu.IdCt" />
+                            <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Tenchitieu" value="@chitieu.Tenchitieu" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Chitieu1" value="@chitieu.Chitieu1" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Motact" value="@chitieu.Motact" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+            <input type="hidden" id="chitieu-list-input" name="chitieuList" />
+
+            <input type="submit" value="Cập nhật" class="btn btn-primary mt-2" />
+            <a class="btn btn-danger mt-2" asp-action="Index">Hủy</a>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Trở về danh sách</a>
-</div>
+<script>
+    function sendDataToController() {
+        const chitieuList = [];
 
-@*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+        // Lặp qua các phần tử input
+        const inputs = document.querySelectorAll('input[name^="chitieuList["]');
+        inputs.forEach(function (input) {
+            const name = input.getAttribute('name');
+            const value = input.value.trim();
+
+            // Tách chỉ mục của chỉ tiêu từ tên input
+            const index = name.match(/\[(\d+)\]/)[1];
+
+            // Kiểm tra xem đối tượng chỉ tiêu đã tồn tại trong danh sách chitieuList chưa
+            // Nếu chưa tồn tại, tạo một đối tượng mới và thêm vào danh sách
+            if (!chitieuList[index]) {
+                chitieuList[index] = {
+                    IdCt: '',
+                    Tenchitieu: '',
+                    Chitieu1: '',
+                    Motact: ''
+                };
+            }
+
+            // Gán giá trị vào đối tượng chỉ tiêu tương ứng
+            if (name.includes('IdCt')) {
+                chitieuList[index].IdCt = value;
+            } else if (name.includes('Tenchitieu')) {
+                chitieuList[index].Tenchitieu = value;
+            } else if (name.includes('Chitieu1')) {
+                chitieuList[index].Chitieu1 = value;
+            } else if (name.includes('Motact')) {
+                chitieuList[index].Motact = value;
+            }
+        });
+
+        // Lọc các đối tượng chỉ tiêu không null và gửi về controller
+        const filteredChitieuList = chitieuList.filter(function (chitieu) {
+            return chitieu !== null;
+        });
+
+        // Gán giá trị của danh sách chitieuList cho input ẩn
+        document.getElementById("chitieu-list-input").value = JSON.stringify(filteredChitieuList);
+    }
+
+
+</script>
