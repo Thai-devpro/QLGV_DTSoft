@@ -1,0 +1,80 @@
+﻿@model IEnumerable<QLGV_DTSoft.Data.NguoiDung>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .rowseach p {
+        display: inline-block;
+        margin-right: 10px;
+    }
+</style>
+<h1>Kết xuất danh sách nhân viên</h1>
+<br />
+<div class="rowseach">
+    <form asp-action="Index" method="get" class="form-inline">
+        <p><select name="idbp" class="form-control" asp-items="@ViewBag.bophan"></select></p>
+        <p style="width:81px"><input type="submit" class="btb btn-success" value="Tìm kiếm" /></p>
+    </form>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">@ViewBag.tbkx</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatable" class="table data-table table-striped">
+                        <thead>
+                            <tr class="ligth">
+                                <th>
+                                    Tên tài khoản
+                                </th>
+
+                                <th>
+                                    Họ tên người dùng
+                                </th>
+
+                                <th>
+                                    Bộ phận làm việc
+                                </th>
+
+                                <th></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tennguoidung)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Hoten)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
+                                    </td>
+
+                                    <td>
+                                        
+                                        <a asp-action="Details" asp-route-id="@item.IdNd">Thông tin chi tiết</a> 
+                                       
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

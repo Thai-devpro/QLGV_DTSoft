@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QLGV_DTSoft.Data;
 using QLGV_DTSoft.Helper;
-
+using MailKit.Net.Smtp;
+using MailKit;
+using System.Net;
+using MimeKit;
 namespace QLGV_DTSoft.Controllers
 {
     [Authorize]
@@ -70,22 +74,92 @@ namespace QLGV_DTSoft.Controllers
                 ModelState.AddModelError("Tennguoidung", "Nhập tên người dùng!");
                 return View(nguoiDung);
             }
-
-            if (nguoiDung.Matkhau == null)
+            var existingNguoiDungWithSameTennguoidung = _context.NguoiDungs.FirstOrDefault(n => n.Tennguoidung == nguoiDung.Tennguoidung);
+            if (existingNguoiDungWithSameTennguoidung != null)
+            {
+                ModelState.AddModelError("Tennguoidung", "Tên người dùng đã tồn tại!.");
+                return View(nguoiDung);
+            }
+            
+            if (nguoiDung.Hoten == null)
             {
                 ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
                 ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
-                ModelState.AddModelError("Matkhau", "Nhập mật khẩu!");
+                ModelState.AddModelError("Hoten", "Nhập họ tên!");
                 return View(nguoiDung);
             }
-            nguoiDung.Matkhau = SecretHasher.Hash(nguoiDung.Matkhau);
-                _context.Add(nguoiDung);
+            if (nguoiDung.Ngaysinh == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Ngaysinh", "Chọn ngày sinh!");
+                return View(nguoiDung);
+            }
+            string regex = @"^([\+]?33[-]?|[0])?[1-9][0-9]{8}$";
+            if (nguoiDung.Sodienthoai == null || !Regex.IsMatch(nguoiDung.Sodienthoai.ToString(), regex))
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Sodienthoai", "Nhập số điện thoại chính xác!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Diachi == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Diachi", "Nhập địa chỉ hiện tại!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Quequan == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Quequan", "Nhập quê quán!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Ngaybatdaulam == null)
+            {
+                nguoiDung.Ngaybatdaulam = DateTime.Now;
+            }
+            string regex2 = @"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+            if (nguoiDung.Email == null || !Regex.IsMatch(nguoiDung.Email.ToString().Trim(), regex2))
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Email", "Vui lòng nhập email chính xác!");
+                return View(nguoiDung);
+            }
+            var password = GenerateRandomPassword();
+            nguoiDung.Matkhau = SecretHasher.Hash(password);
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("DTSoft", "DTSoft@gmail.com"));
+            message.To.Add(new MailboxAddress("Thành Viên", nguoiDung.Email));
+            message.Subject = "Thông tin tài khoản người dùng";
+            message.Body = new TextPart("plain")
+            {
+                Text = $"Gửi {nguoiDung.Hoten},\n\nTài khoản của bạn đã được tạo.\nTên đăng nhập: {nguoiDung.Tennguoidung}.\nMật khẩu: {password}"
+            };
+
+            using var client = new SmtpClient();
+            client.Connect("smtp.gmail.com");
+            client.Authenticate("devthai3401@gmail.com", "mfpcaknsbfmwrvzd");
+            client.Send(message);
+            client.Disconnect(true);
+
+
+            _context.Add(nguoiDung);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             
             
         }
-
+        private string GenerateRandomPassword()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, 8)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
         // GET: NguoiDungs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -116,9 +190,70 @@ namespace QLGV_DTSoft.Controllers
             {
                 return NotFound();
             }
+            if (nguoiDung.Tennguoidung == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Tennguoidung", "Nhập tên người dùng!");
+                return View(nguoiDung);
+            }
+            var existingNguoiDungWithSameTennguoidung = _context.NguoiDungs.FirstOrDefault(n => n.Tennguoidung == nguoiDung.Tennguoidung);
+            if (existingNguoiDungWithSameTennguoidung != null && existingNguoiDungWithSameTennguoidung.IdNd != nguoiDung.IdNd)
+            {
+                ModelState.AddModelError("Tennguoidung", "Tên người dùng đã tồn tại!.");
+                return View(nguoiDung);
+            }
 
-            
-                try
+            if (nguoiDung.Hoten == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Hoten", "Nhập họ tên!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Ngaysinh == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Ngaysinh", "Chọn ngày sinh!");
+                return View(nguoiDung);
+            }
+            string regex = @"^([\+]?33[-]?|[0])?[1-9][0-9]{8}$";
+            if (nguoiDung.Sodienthoai == null || !Regex.IsMatch(nguoiDung.Sodienthoai.ToString(), regex))
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Sodienthoai", "Nhập số điện thoại chính xác!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Diachi == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Diachi", "Nhập địa chỉ hiện tại!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Quequan == null)
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Quequan", "Nhập quê quán!");
+                return View(nguoiDung);
+            }
+            if (nguoiDung.Ngaybatdaulam == null)
+            {
+                nguoiDung.Ngaybatdaulam = DateTime.Now;
+            }
+            string regex2 = @"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+            if (nguoiDung.Email == null || !Regex.IsMatch(nguoiDung.Email.ToString().Trim(), regex2))
+            {
+                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
+                ModelState.AddModelError("Email", "Vui lòng nhập email chính xác!");
+                return View(nguoiDung);
+            }
+
+            try
                 {
                     _context.Update(nguoiDung);
                     await _context.SaveChangesAsync();
@@ -136,9 +271,7 @@ namespace QLGV_DTSoft.Controllers
                 }
                 return RedirectToAction(nameof(Index));
            
-            //ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
-            //ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
-            //return View(nguoiDung);
+           
         }
         public async Task<IActionResult> Edit2(int? id)
         {

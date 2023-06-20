@@ -1,0 +1,89 @@
+﻿@model QLGV_DTSoft.Data.NguoiDung
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>NguoiDung</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdVt" class="control-label"></label>
+                <select asp-for="IdVt" class ="form-control" asp-items="ViewBag.IdVt"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdBp" class="control-label"></label>
+                <select asp-for="IdBp" class ="form-control" asp-items="ViewBag.IdBp"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tennguoidung" class="control-label"></label>
+                <input asp-for="Tennguoidung" class="form-control" />
+                <span asp-validation-for="Tennguoidung" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Matkhau" class="control-label"></label>
+                <input asp-for="Matkhau" class="form-control" />
+                <span asp-validation-for="Matkhau" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Hoten" class="control-label"></label>
+                <input asp-for="Hoten" class="form-control" />
+                <span asp-validation-for="Hoten" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ngaysinh" class="control-label"></label>
+                <input asp-for="Ngaysinh" class="form-control" />
+                <span asp-validation-for="Ngaysinh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gioitinh" class="control-label"></label>
+                <input asp-for="Gioitinh" class="form-control" />
+                <span asp-validation-for="Gioitinh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sodienthoai" class="control-label"></label>
+                <input asp-for="Sodienthoai" class="form-control" />
+                <span asp-validation-for="Sodienthoai" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quequan" class="control-label"></label>
+                <input asp-for="Quequan" class="form-control" />
+                <span asp-validation-for="Quequan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Diachi" class="control-label"></label>
+                <input asp-for="Diachi" class="form-control" />
+                <span asp-validation-for="Diachi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ngaybatdaulam" class="control-label"></label>
+                <input asp-for="Ngaybatdaulam" class="form-control" />
+                <span asp-validation-for="Ngaybatdaulam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Thamnien" class="control-label"></label>
+                <input asp-for="Thamnien" class="form-control" />
+                <span asp-validation-for="Thamnien" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
