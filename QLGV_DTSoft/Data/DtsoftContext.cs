@@ -37,7 +37,7 @@ public partial class DtsoftContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LamQuocThai\\SQLEXPRESS01;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-J0DDGD9P\\MSSQLSERVER16;Database=DTSoft;Integrated Security=True;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,16 +73,14 @@ public partial class DtsoftContext : DbContext
             entity.HasIndex(e => e.IdKh, "CO_CHI_TIEU_FK");
 
             entity.Property(e => e.IdCt).HasColumnName("ID_CT");
-            entity.Property(e => e.Chitieu1)
+            entity.Property(e => e.Chitieu)
                 .HasMaxLength(255)
                 .HasColumnName("CHITIEU");
+            entity.Property(e => e.Doanhso).HasColumnName("DOANHSO");
+            entity.Property(e => e.Donvitinh)
+                .HasMaxLength(255)
+                .HasColumnName("DONVITINH");
             entity.Property(e => e.IdKh).HasColumnName("ID_KH");
-            entity.Property(e => e.Motact)
-                .HasMaxLength(255)
-                .HasColumnName("MOTACT");
-            entity.Property(e => e.Tenchitieu)
-                .HasMaxLength(255)
-                .HasColumnName("TENCHITIEU");
 
             entity.HasOne(d => d.IdKhNavigation).WithMany(p => p.ChiTieus)
                 .HasForeignKey(d => d.IdKh)
@@ -269,7 +267,7 @@ public partial class DtsoftContext : DbContext
 
         modelBuilder.Entity<ThamGium>(entity =>
         {
-            entity.HasKey(e => new { e.IdNd, e.IdKh });
+            entity.HasKey(e => new { e.IdNd, e.IdKh, e.IdCt });
 
             entity.ToTable("THAM_GIA");
 
@@ -279,10 +277,16 @@ public partial class DtsoftContext : DbContext
 
             entity.Property(e => e.IdNd).HasColumnName("ID_ND");
             entity.Property(e => e.IdKh).HasColumnName("ID_KH");
+            entity.Property(e => e.IdCt).HasColumnName("ID_CT");
             entity.Property(e => e.Danhgia)
                 .HasMaxLength(50)
                 .HasColumnName("DANHGIA");
             entity.Property(e => e.SlHoanthanh).HasColumnName("SL_HOANTHANH");
+
+            entity.HasOne(d => d.IdCtNavigation).WithMany(p => p.ThamGia)
+                .HasForeignKey(d => d.IdCt)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CHI_TIEU_CUA_KE_HOACH");
 
             entity.HasOne(d => d.IdKhNavigation).WithMany(p => p.ThamGia)
                 .HasForeignKey(d => d.IdKh)

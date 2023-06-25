@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using QLGV_DTSoft.Data;
 
 namespace QLGV_DTSoft.Controllers
 {
+    [Authorize]
     public class BoPhansController : Controller
     {
         private readonly DtsoftContext _context;
@@ -21,7 +24,10 @@ namespace QLGV_DTSoft.Controllers
         // GET: BoPhans
         public async Task<IActionResult> Index()
         {
-            var dtsoftContext = _context.BoPhans.Include(b => b.IdKhuvucNavigation);
+            var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
+            int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
+            var dtsoftContext = _context.BoPhans.Include(b => b.IdKhuvucNavigation).Where(b => b.IdKhuvucNavigation.IdKhuvuc == khuvucId);
+
             return View(await dtsoftContext.ToListAsync());
         }
 

@@ -16,7 +16,7 @@
     <div class="card-body">
         <form asp-action="Edit" onsubmit="sendDataToController()" id="editForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdKh" />
+            <input type="hidden" name="IdKh" asp-for="IdKh" />
             <div class="row">
                 <div class="col">
                     <label asp-for="IdBp" class="control-label">Bộ phận phụ trách</label>
@@ -60,38 +60,66 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <label class="control-label">Tên chỉ tiêu</label>
-                </div>
-                <div class="col-4">
                     <label class="control-label">Chỉ tiêu</label>
                 </div>
                 <div class="col-4">
-                    <label class="control-label">Miêu tả</label>
+                    <label class="control-label">Doanh số</label>
+                </div>
+                <div class="col-4">
+                    <label class="control-label">Đơn vị tính</label>
                 </div>
             </div>
-
-            @foreach (var chitieu in Model.ChiTieus)
-            {
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <input class="form-control" type="hidden" name="chitieuList[@chitieu.IdCt].IdCt" value="@chitieu.IdCt" />
-                            <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Tenchitieu" value="@chitieu.Tenchitieu" />
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Chitieu1" value="@chitieu.Chitieu1" />
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Motact" value="@chitieu.Motact" />
-                        </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                     
+                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'doanhso-input')" />
                     </div>
                 </div>
-            }
+                <div class="col-3">
+                    <div class="form-group">
+                      
+                        <input class="form-control" type="number" id="doanhso-input" placeholder="Nhập doanh số" onkeydown="checkEnter(event, 'dvt-input')" disabled />
+                    </div>
+                </div>
 
+                <div class="col-4">
+                    <div class="form-group">
+                
+                        <input class="form-control" type="text" id="dvt-input" placeholder="Nhập đơn vị tính" onkeydown="addChitieu(event)" disabled />
+                    </div>
+                </div>
+            </div>
+            <div id="chitieu-container">
+                @if (Model.ChiTieus.Any())
+                {
+                    @foreach (var chitieu in Model.ChiTieus)
+                    {
+                        <div class="row" data-chitieu-id="@chitieu.IdCt">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="hidden" name="chitieuList[@chitieu.IdCt].IdCt" value="@chitieu.IdCt" />
+                                    <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Chitieu" value="@chitieu.Chitieu" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input class="form-control" type="number" name="chitieuList[@chitieu.IdCt].Doanhso" value="@chitieu.Doanhso" />
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="chitieuList[@chitieu.IdCt].Dvt" value="@chitieu.Donvitinh" />
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="showConfirmationModal('@chitieu.IdCt')" data-target="#confirmationModal" data-toggle="modal">Xóa</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            
 
 
             <input type="hidden" id="chitieu-list-input" name="chitieuList" />
@@ -101,51 +129,160 @@
         </form>
     </div>
 </div>
+@*Modal xóa*@
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa chỉ tiêu này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<script>
-    function sendDataToController() {
-        const chitieuList = [];
+@section scripts{
+    <script>
+        function sendDataToController() {
+            const chitieuList = [];
 
-        // Lặp qua các phần tử input
-        const inputs = document.querySelectorAll('input[name^="chitieuList["]');
-        inputs.forEach(function (input) {
-            const name = input.getAttribute('name');
-            const value = input.value.trim();
+            // Lặp qua các phần tử input
+            const inputs = document.querySelectorAll('input[name^="chitieuList["]');
+            inputs.forEach(function (input) {
+                const name = input.getAttribute('name');
+                const value = input.value.trim();
 
-            // Tách chỉ mục của chỉ tiêu từ tên input
-            const index = name.match(/\[(\d+)\]/)[1];
+                // Tách chỉ mục của chỉ tiêu từ tên input
+                const index = name.match(/\[(\d+)\]/)[1];
 
-            // Kiểm tra xem đối tượng chỉ tiêu đã tồn tại trong danh sách chitieuList chưa
-            // Nếu chưa tồn tại, tạo một đối tượng mới và thêm vào danh sách
-            if (!chitieuList[index]) {
-                chitieuList[index] = {
-                    IdCt: '',
-                    Tenchitieu: '',
-                    Chitieu1: '',
-                    Motact: ''
+                // Kiểm tra xem đối tượng chỉ tiêu đã tồn tại trong danh sách chitieuList chưa
+                // Nếu chưa tồn tại, tạo một đối tượng mới và thêm vào danh sách
+                if (!chitieuList[index]) {
+                    chitieuList[index] = {
+                        IdCt: '',
+                        Chitieu: '',
+                        Doanhso: '',
+                        Donvitinh: ''
+                    };
+                }
+                // Gán giá trị vào đối tượng chỉ tiêu tương ứng
+                if (name.includes('IdCt')) {
+                    chitieuList[index].IdCt = value;
+                } else if (name.includes('Chitieu')) {
+                    chitieuList[index].Chitieu = value;
+                } else if (name.includes('Doanhso')) {
+                    chitieuList[index].Doanhso = value;
+                } else if (name.includes('Dvt')) {
+                    chitieuList[index].Donvitinh = value;
+                }
+            });
+
+            // Lọc các đối tượng chỉ tiêu không null và gửi về controller
+            const filteredChitieuList = chitieuList.filter(function (chitieu) {
+                return chitieu !== null;
+            });
+
+            // Gán giá trị của danh sách chitieuList cho input ẩn
+            document.getElementById("chitieu-list-input").value = JSON.stringify(filteredChitieuList);
+
+            return false;
+        }
+
+        function checkEnter(event, nextInputId) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById(nextInputId).disabled = false;
+                document.getElementById(nextInputId).focus();
+            }
+        }
+
+        function addChitieu(event) {
+            
+            if (event.key === 'Enter') {
+                event.preventDefault();
+
+                var chitieu = document.getElementById("chitieu-input").value;
+                var doanhso = document.getElementById("doanhso-input").value;
+                var donvitinh = document.getElementById("dvt-input").value;
+                var idKh = document.getElementById("IdKh").value;
+
+                const newChitieuObj = {
+                    chitieu: chitieu,
+                    doanhso: doanhso,
+                    donvitinh: donvitinh,
+                    idkh : idKh
                 };
-            }
+                
 
-            // Gán giá trị vào đối tượng chỉ tiêu tương ứng
-            if (name.includes('IdCt')) {
-                chitieuList[index].IdCt = value;
-            } else if (name.includes('Tenchitieu')) {
-                chitieuList[index].Tenchitieu = value;
-            } else if (name.includes('Chitieu1')) {
-                chitieuList[index].Chitieu1 = value;
-            } else if (name.includes('Motact')) {
-                chitieuList[index].Motact = value;
+                fetch('/KeHoachGiaoViecs/AddChitieu', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newChitieuObj)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            throw new Error('Error: ' + response.status);
+                        }
+                    })
+                    .then(data => {
+                        // Xử lý phản hồi từ server
+                        console.log('Response from server:', data);
+                    })
+                    .catch(error => {
+                        // Xử lý lỗi
+                        console.error('Error:', error);
+                    });
+
+                /// Xóa giá trị ô input
+                document.getElementById("tenchitieu-input").value = "";
+                document.getElementById("chitieu-input").value = "";
+                document.getElementById("mieuta-input").value = "";
+                document.getElementById("chitieu-input").disabled = true;
+                document.getElementById("mieuta-input").disabled = true;
+
+                // Di chuyển focus đến ô input đầu tiên
+                document.getElementById("tenchitieu-input").focus();
+                
             }
+        }
+              
+
+
+        function showConfirmationModal(chitieuId) {
+            // Thiết lập giá trị của thuộc tính data-chitieu-id trong modal
+            $("#confirmationModal").attr("data-chitieu-id", chitieuId);
+        };
+
+        $("#confirmDeleteButton").click(function () {
+
+            var chitieuId = $("#confirmationModal").attr("data-chitieu-id");
+            // Gửi yêu cầu xóa đến controller
+            $.post("/KeHoachGiaoViecs/DeleteChiTieu", { chitieuId: chitieuId }, function (result) {
+                if (result.success) {
+                    // Xóa hàng chỉ tiêu khỏi view
+                    $(".row[data-chitieu-id='" + chitieuId + "']").remove();
+                    // Đóng modal xác nhận
+                    $("#confirmationModal").modal("hide");
+                } else {
+                    // Xử lý khi xảy ra lỗi
+                    alert("Đã xảy ra lỗi khi xóa chỉ tiêu.");
+                }
+            });
         });
 
-        // Lọc các đối tượng chỉ tiêu không null và gửi về controller
-        const filteredChitieuList = chitieuList.filter(function (chitieu) {
-            return chitieu !== null;
-        });
 
-        // Gán giá trị của danh sách chitieuList cho input ẩn
-        document.getElementById("chitieu-list-input").value = JSON.stringify(filteredChitieuList);
-    }
-
-
-</script>
+    </script>
+}

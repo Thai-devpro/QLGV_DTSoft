@@ -14,6 +14,7 @@ builder.Services.AddDbContext<DtsoftContext>(db =>
 
 builder.Services.AddSession(options => {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
+   
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -40,6 +41,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
+
 app.UseAuthentication();
 
 app.UseAuthorization();

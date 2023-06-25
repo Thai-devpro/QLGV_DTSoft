@@ -81,20 +81,21 @@
             <div class="row">
                 <div class="col-4">
                     <div class="form-group">
-                        <label class="control-label">Tên chỉ tiêu</label>
-                        <input class="form-control" type="text" id="tenchitieu-input" placeholder="Nhập tên chỉ tiêu" onkeydown="checkEnter(event, 'chitieu-input')" />
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
                         <label class="control-label">Chỉ tiêu</label>
-                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'mieuta-input')" disabled />
+                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'doanhso-input')" />
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="form-group">
-                        <label class="control-label">Miêu tả</label>
-                        <input class="form-control" type="text" id="mieuta-input" placeholder="Nhập miêu tả" onkeydown="addChitieu(event)" disabled />
+                        <label class="control-label">Doanh số</label>
+                        <input class="form-control" type="number" id="doanhso-input" placeholder="Nhập doanh số" onkeydown="checkEnter(event, 'dvt-input')" disabled />
+                    </div>
+                </div>
+                
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="control-label">Đơn vị tính</label>
+                        <input class="form-control" type="text" id="dvt-input" placeholder="Nhập đơn vị tính" onkeydown="addChitieu(event)" disabled />
                     </div>
                 </div>
             </div>
@@ -111,63 +112,68 @@
         </form>
     </div>
 </div>
-<script>
-    const chitieuList = [];
-    function checkEnter(event, nextInputId) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            document.getElementById(nextInputId).disabled = false;
-            document.getElementById(nextInputId).focus();
-        }
-    }
-
-    function addChitieu(event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-
-            const tenchitieuInput = document.getElementById("tenchitieu-input");
-            const chitieuInput = document.getElementById("chitieu-input");
-            const mieutaInput = document.getElementById("mieuta-input");
-
-            const tenchitieu = tenchitieuInput.value.trim();
-            const chitieu = chitieuInput.value.trim();
-            const mieuta = mieutaInput.value.trim();
-
-            if (tenchitieu !== "" && chitieu !== "" && mieuta !== "") {
-                const newChitieu = {
-                    tenchitieu: tenchitieu,
-                    chitieu1: chitieu,
-                    motact: mieuta
-                };
-
-                chitieuList.push(newChitieu);
-
-                // Thêm mã HTML cho chỉ tiêu vào danh sách
-                const chitieuListDiv = document.getElementById("chitieu-list");
-                const listItem = document.createElement("div");
-                listItem.classList.add("list-group-item");
-                listItem.innerHTML = `${tenchitieu} | ${chitieu} | ${mieuta} <span onclick="removeChitieu(event)"><i class="fa fa-trash"></i></span>`;
-                chitieuListDiv.appendChild(listItem);
-
-                // Xóa dữ liệu trong các input và tắt chế độ chỉnh sửa
-                tenchitieuInput.value = "";
-                chitieuInput.value = "";
-                mieutaInput.value = "";
-                tenchitieuInput.disabled = false;
-                chitieuInput.disabled = true;
-                mieutaInput.disabled = true;
-                tenchitieuInput.focus();
+@section scripts{
+    <script>
+        const chitieuList = [];
+        function checkEnter(event, nextInputId) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById(nextInputId).disabled = false;
+                document.getElementById(nextInputId).focus();
             }
         }
-    }
+
+        function addChitieu(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+
+                const doanhsoInput = document.getElementById("doanhso-input");
+                const chitieuInput = document.getElementById("chitieu-input");
+                const dvtInput = document.getElementById("dvt-input");
+
+                const doanhso = doanhsoInput.value.trim();
+                const chitieu = chitieuInput.value.trim();
+                const donvitinh = dvtInput.value.trim();
+
+                if (doanhso !== "" && chitieu !== "" && donvitinh !== "") {
+                    const newChitieu = {
+                        doanhso: doanhso,
+                        chitieu: chitieu,
+                        donvitinh: donvitinh
+                    };
+
+                    chitieuList.push(newChitieu);
+
+                    // Thêm mã HTML cho chỉ tiêu vào danh sách
+                    const chitieuListDiv = document.getElementById("chitieu-list");
+                    const listItem = document.createElement("div");
+                    listItem.classList.add("list-group-item");
+                    listItem.innerHTML = `${chitieu} | ${doanhso} | ${donvitinh} <span onclick="removeChitieu(event)"><i class="fa fa-trash"></i></span>`;
+                    chitieuListDiv.appendChild(listItem);
+
+                    // Xóa dữ liệu trong các input và tắt chế độ chỉnh sửa
+                    doanhsoInput.value = "";
+                    chitieuInput.value = "";
+                    dvtInput.value = "";
+                    doanhsoInput.disabled = true;
+                    chitieuInput.disabled = false;
+                    dvtInput.disabled = true;
+                    chitieuInput.focus();
+                }
+            }
+        }
 
 
-    function removeChitieu(event) {
-        const listItem = event.target.parentNode.parentNode;
-        listItem.parentNode.removeChild(listItem);
-    }
-    function sendDataToController() {
-        document.getElementById("chitieu-list-input").value = JSON.stringify(chitieuList);
-    }
-</script>
+        function removeChitieu(event) {
+            const listItem = event.target.parentNode.parentNode;
+            listItem.parentNode.removeChild(listItem);
+        }
+        function sendDataToController() {
+            document.getElementById("chitieu-list-input").value = JSON.stringify(chitieuList);
+        }
+    </script>
+}
+
+
+
 
