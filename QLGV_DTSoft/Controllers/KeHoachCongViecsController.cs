@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,11 @@ namespace QLGV_DTSoft.Controllers
         // GET: KeHoachCongViecs
         public async Task<IActionResult> Index(string? NamthuchienFormatted)
         {
+            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 3 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+            if (count == 0)
+            {
+                return RedirectToAction("norole", "Home");
+            }
             var nth = _context.KeHoachCongViecs
                 .Select(h => h.NamthuchienFormatted)
                 .Distinct()

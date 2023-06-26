@@ -77,5 +77,10 @@ namespace QLGV_DTSoft.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public IActionResult norole()
+        {
+            
+            return View();
+        }
     }
 }

@@ -19,6 +19,11 @@ namespace QLGV_DTSoft.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 5 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+            if (count == 0)
+            {
+                return RedirectToAction("norole", "Home");
+            }
 
             var bophanIdClaim = User.FindFirstValue("idBophan");
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");

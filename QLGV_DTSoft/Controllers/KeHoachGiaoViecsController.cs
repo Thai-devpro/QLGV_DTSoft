@@ -26,6 +26,11 @@ namespace QLGV_DTSoft.Controllers
         // GET: KeHoachGiaoViecs
         public async Task<IActionResult> Index()
         {
+            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 4 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+            if (count == 0)
+            {
+                return RedirectToAction("norole", "Home");
+            }
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
             int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
 

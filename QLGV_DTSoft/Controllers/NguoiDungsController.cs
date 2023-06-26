@@ -30,6 +30,13 @@ namespace QLGV_DTSoft.Controllers
         // GET: NguoiDungs
         public async Task<IActionResult> Index()
         {
+            
+            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 1 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+            if (count == 0)
+            {
+                return RedirectToAction("norole", "Home");
+            }
+
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
             int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
             var dtsoftContext = _context.NguoiDungs.Include(n => n.IdBpNavigation).ThenInclude(kv => kv.IdKhuvucNavigation).Include(n => n.IdVtNavigation).Where(n => n.IdBpNavigation.IdKhuvuc == khuvucId); ;
@@ -59,7 +66,9 @@ namespace QLGV_DTSoft.Controllers
         // GET: NguoiDungs/Create
         public IActionResult Create()
         {
-            ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan");
+            var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
+            int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
+            ViewData["IdBp"] = new SelectList(_context.BoPhans.Where(b => b.IdKhuvuc == khuvucId), "IdBp", "Tenbophan");
             ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro");
             return View();
         }
@@ -73,7 +82,9 @@ namespace QLGV_DTSoft.Controllers
         {
             if(nguoiDung.Tennguoidung == null)
             {
-                ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", nguoiDung.IdBp);
+                var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
+                int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
+                ViewData["IdBp"] = new SelectList(_context.BoPhans.Where(b => b.IdKhuvuc == khuvucId), "IdBp", "Tenbophan", nguoiDung.IdBp);
                 ViewData["IdVt"] = new SelectList(_context.VaiTros, "IdVt", "Tenvaitro", nguoiDung.IdVt);
                 ModelState.AddModelError("Tennguoidung", "Nhập tên người dùng!");
                 return View(nguoiDung);
@@ -172,7 +183,7 @@ namespace QLGV_DTSoft.Controllers
                 return NotFound();
             }
 
-            var nguoiDung = await _context.NguoiDungs.FindAsync(id);
+            var nguoiDung =  _context.NguoiDungs.AsNoTracking().FirstOrDefault(n => n.IdNd == id);
             if (nguoiDung == null)
             {
                 return NotFound();
@@ -201,7 +212,7 @@ namespace QLGV_DTSoft.Controllers
                 ModelState.AddModelError("Tennguoidung", "Nhập tên người dùng!");
                 return View(nguoiDung);
             }
-            var existingNguoiDungWithSameTennguoidung = _context.NguoiDungs.FirstOrDefault(n => n.Tennguoidung == nguoiDung.Tennguoidung);
+            var existingNguoiDungWithSameTennguoidung = _context.NguoiDungs.AsNoTracking().FirstOrDefault(n => n.Tennguoidung == nguoiDung.Tennguoidung);
             if (existingNguoiDungWithSameTennguoidung != null && existingNguoiDungWithSameTennguoidung.IdNd != nguoiDung.IdNd)
             {
                 ModelState.AddModelError("Tennguoidung", "Tên người dùng đã tồn tại!.");
