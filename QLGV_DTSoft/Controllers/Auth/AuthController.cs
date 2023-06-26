@@ -105,5 +105,10 @@ namespace QLGV_DTSoft.Controllers.Auth
         {
             return await _context.NguoiDungs.Include(u => u.IdBpNavigation).ThenInclude(uu => uu.IdKhuvucNavigation).Include(u => u.IdVtNavigation).FirstOrDefaultAsync(u => u.Tennguoidung == tennguoidung);
         }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

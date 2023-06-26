@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QLGV_DTSoft.Data;
+using QLGV_DTSoft.Helper;
 
 namespace QLGV_DTSoft.Controllers
 {
-    [Authorize]
+    [CustomAuthorize(6)]
     public class KhuVucsController : Controller
     {
         private readonly DtsoftContext _context;
@@ -24,11 +25,11 @@ namespace QLGV_DTSoft.Controllers
         // GET: KhuVucs
         public async Task<IActionResult> Index()
         {
-            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 6 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+           /* var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 6 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
             if (count == 0)
             {
                 return RedirectToAction("norole", "Home");
-            }
+            }*/
             return _context.KhuVucs != null ? 
                           View(await _context.KhuVucs.ToListAsync()) :
                           Problem("Entity set 'DtsoftContext.KhuVucs'  is null.");

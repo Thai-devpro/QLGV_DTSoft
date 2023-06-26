@@ -17,7 +17,7 @@ using System.Security.Claims;
 
 namespace QLGV_DTSoft.Controllers
 {
-    [Authorize]
+    [CustomAuthorize(1)]
     public class NguoiDungsController : Controller
     {
         private readonly DtsoftContext _context;
@@ -31,11 +31,11 @@ namespace QLGV_DTSoft.Controllers
         public async Task<IActionResult> Index()
         {
             
-            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 1 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+/*            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 1 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
             if (count == 0)
             {
                 return RedirectToAction("norole", "Home");
-            }
+            }*/
 
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
             int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
