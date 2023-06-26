@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +13,7 @@ using QLGV_DTSoft.Data;
 
 namespace QLGV_DTSoft.Controllers
 {
+    [Authorize]
     public class KeHoachGiaoViecsController : Controller
     {
         private readonly DtsoftContext _context;
@@ -22,7 +26,11 @@ namespace QLGV_DTSoft.Controllers
         // GET: KeHoachGiaoViecs
         public async Task<IActionResult> Index()
         {
-            var dtsoftContext = _context.KeHoachGiaoViecs.Include(k => k.IdBpNavigation).Include(k => k.IdKhcvNavigation);
+            var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
+            int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
+
+            var dtsoftContext = _context.KeHoachGiaoViecs.Include(k => k.IdBpNavigation).ThenInclude(kv => kv.IdKhuvucNavigation).Include(k => k.IdKhcvNavigation)
+                .Where(k => k.IdBpNavigation.IdKhuvuc == khuvucId);
             return View(await dtsoftContext.ToListAsync());
         }
 
@@ -137,9 +145,9 @@ namespace QLGV_DTSoft.Controllers
                         if (existingChitieu != null)
                         {
                             // Cập nhật các thuộc tính của chỉ tiêu đã tồn tại
-                            existingChitieu.Tenchitieu = chitieu.Tenchitieu;
-                            existingChitieu.Chitieu1 = chitieu.Chitieu1;
-                            existingChitieu.Motact = chitieu.Motact;
+                            existingChitieu.Chitieu = chitieu.Chitieu;
+                            existingChitieu.Doanhso = chitieu.Doanhso;
+                            existingChitieu.Donvitinh = chitieu.Donvitinh;
 
                             _context.Update(existingChitieu);
                         }
@@ -216,5 +224,58 @@ namespace QLGV_DTSoft.Controllers
         {
           return (_context.KeHoachGiaoViecs?.Any(e => e.IdKh == id)).GetValueOrDefault();
         }
+
+        [HttpPost]
+        public IActionResult DeleteChiTieu(int chitieuId)
+        {
+            try
+            {
+              
+                var chitieu = _context.ChiTieus.Find(chitieuId);
+
+                if (chitieu == null)
+                {
+               
+                    return Json(new { success = false, error = "Chỉ tiêu không tồn tại." });
+                }
+
+            
+                _context.ChiTieus.Remove(chitieu);
+                _context.SaveChanges();
+
+            
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddChitieu([FromBody] ChiTieu chitieuListNew)
+        {
+            if (chitieuListNew != null)
+            {
+                // Tạo một đối tượng ChiTieu từ ChiTieuViewModel
+                var chiTieu = new ChiTieu
+                {
+                    Chitieu = chitieuListNew.Chitieu,
+                    Doanhso = chitieuListNew.Doanhso,
+                    Donvitinh = chitieuListNew.Donvitinh,
+                    IdKh = chitieuListNew.IdKh
+                };
+
+                _context.Add(chiTieu);
+                await _context.SaveChangesAsync();
+            
+                return Ok();
+            }
+
+           
+            return BadRequest("Danh sách chỉ tiêu mới trống");
+        }
+
     }
 }

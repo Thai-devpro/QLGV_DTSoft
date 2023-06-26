@@ -1,0 +1,86 @@
+﻿@model QLGV_DTSoft.ViewModel.AddToPlanViewModel
+<style>
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group mb-3">
+            <label class="h5">Tên kế hoạch</label>
+            <input type="text" class="form-control" value="@Model.KeHoachGiaoViec.Tenkehoach" readonly>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label class="h5">Ngày bắt đầu</label>
+            <input type="datetime" class="form-control" value="@Model.KeHoachGiaoViec.Ngaybatdau" readonly>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label class="h5">Ngày kết thúc</label>
+            <input type="datetime" class="form-control" value="@Model.KeHoachGiaoViec.Ngayketthuc" readonly>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group mb-3">
+            <label  class="h5">Mô tả</label>
+            <textarea class="form-control" rows="2" readonly>@Model.KeHoachGiaoViec.Motakh</textarea>
+        </div>
+    </div>
+    <form class="col-lg-12" id="addToPlanForm" method="post" action="@Url.Action("AddSelectedEmployees", "PhancongCongviec")">
+        <div class="form-group mb-3">
+            <label class="h5">Các chỉ tiêu của kế hoạch</label>
+            <ul>
+                @foreach (var chiTieu in Model.ChiTieu)
+                {
+                    <li>
+                        <input type="radio" name="selectedChiTieu" value="@chiTieu.IdCt" onchange="filterEmployeesByChiTieu(this.value)" /> @chiTieu.Chitieu
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="form-group mb-3">
+            <label class="h5">Nhân viên được giao công việc</label>
+            <input type="hidden" name="idKh" value="@Model.KeHoachGiaoViec.IdKh" />
+            <ul id="employeeList">
+                @foreach (var nhanvien in Model.DsNhanvien)
+                {
+                    bool isSelected = Model.DsIdThamGia.Contains(nhanvien.IdNd);
+                    <li>
+                        <input type="checkbox" name="selectedNhanVien" value="@nhanvien.IdNd" @(isSelected ? "checked" : "") /> @nhanvien.Hoten
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="d-flex flex-wrap align-items-ceter justify-content-center mt-4">
+            <button type="submit" class="btn btn-success mr-3">Lưu</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+        </div>
+
+    </form>
+</div>
+@section scripts {
+    <script>
+        function filterEmployeesByChiTieu(selectedChiTieu) {
+            var employeeList = document.getElementById('employeeList');
+            var checkboxes = employeeList.getElementsByTagName('input');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                var checkbox = checkboxes[i];
+                var chiTieuValue = checkbox.getAttribute('data-chitieu');
+
+                if (chiTieuValue === selectedChiTieu) {
+                    checkbox.parentNode.style.display = 'block';
+                } else {
+                    checkbox.parentNode.style.display = 'none';
+                    checkbox.checked = false;
+                }
+            }
+        }
+    </script>
+}

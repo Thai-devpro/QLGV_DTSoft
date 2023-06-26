@@ -13,6 +13,8 @@ using MailKit.Net.Smtp;
 using MailKit;
 using System.Net;
 using MimeKit;
+using System.Security.Claims;
+
 namespace QLGV_DTSoft.Controllers
 {
     [Authorize]
@@ -28,7 +30,9 @@ namespace QLGV_DTSoft.Controllers
         // GET: NguoiDungs
         public async Task<IActionResult> Index()
         {
-            var dtsoftContext = _context.NguoiDungs.Include(n => n.IdBpNavigation).Include(n => n.IdVtNavigation);
+            var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
+            int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
+            var dtsoftContext = _context.NguoiDungs.Include(n => n.IdBpNavigation).ThenInclude(kv => kv.IdKhuvucNavigation).Include(n => n.IdVtNavigation).Where(n => n.IdBpNavigation.IdKhuvuc == khuvucId); ;
             return View(await dtsoftContext.ToListAsync());
         }
 

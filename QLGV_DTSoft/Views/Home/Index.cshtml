@@ -1,9 +1,112 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<QLGV_DTSoft.Data.KeHoachGiaoViec>
+
+@using System.Security.Claims
+@{
+    var user = Context.User;
+    var idNguoidungClaim = user.FindFirstValue("idNguoidung");
+    int idnd = int.Parse(idNguoidungClaim);
+    var tenndClaim = user.FindFirstValue(ClaimTypes.Name);
+    var tenvaitroClaim = user.FindFirstValue(ClaimTypes.Role);
+    var tenBophanClaim = user.FindFirstValue("tenBophan");
+    var tenKhuvucClaim = user.FindFirstValue("tenKhuvuc");
+
+
+    ViewData["Title"] = "Danh sách công việc được giao của " + @tenndClaim;
 }
-<!-- loader Start -->
-<div style='color: #0098a1; width: 100%; height: 100%;'>
-    <div style='text-align: center; padding-top: 20%; font-weight: 500;font-size: 70px;'>
-            QUẢN LÝ KẾ HOẠCH GIAO VIỆC DTSOFT
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    @if (Model.Any())
+                    {
+                        @foreach (var congviecduocgiao in Model)
+                        {
+                            <div class="col-lg-12">
+                                <div class="card card-widget task-card">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <h5 class="mb-2">@congviecduocgiao.Tenkehoach</h5>
+                                                    <div class="media align-items-center">
+                                                        <div class="btn bg-body mr-3">
+                                                            <i class="ri-calendar-line"></i> @string.Format("{0:dd/MM/yyyy}", congviecduocgiao.Ngaybatdau) - @string.Format("{0:dd/MM/yyyy}", congviecduocgiao.Ngayketthuc)
+                                                        </div>
+                                                        @foreach (var thamgia in congviecduocgiao.ThamGia)
+                                                        {
+                                                            @if (thamgia.IdNd == idnd)
+                                                            {
+                                                                <div class="btn bg-body mr-2">
+
+
+                                                                    <span>@thamgia.IdCtNavigation.Chitieu</span>
+                                                                    <div><i class="ri-checkbox-line mr-2"></i>Số lượng đã hoàn thành: @thamgia.SlHoanthanh</div>
+
+
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="media align-items-center">
+                                                <button type="button" class="btn bg-secondary-light mr-3" data-toggle="modal" data-target="#updateProgressModal_@congviecduocgiao.IdKh">Cập nhật tiến độ</button>
+                                                <a class="btn bg-secondary-light" data-toggle="collapse" href="#collapseEdit1" role="button" aria-expanded="false" aria-controls="collapseEdit1"><i class="ri-edit-box-line m-0"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal Cập nhật tiến độ -->
+                            <div class="modal fade" id="updateProgressModal_@congviecduocgiao.IdKh" tabindex="-1" role="dialog" aria-labelledby="updateProgressModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="updateProgressModalLabel">Cập nhật tiến độ</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form asp-action="CapNhatTienDo" method="post">
+                                                <input type="hidden" name="idKeHoach" value="@congviecduocgiao.IdKh" />
+
+                                                @foreach (var chitieu in congviecduocgiao.ChiTieus)
+                                                {
+                                                    <div class="form-group">
+                                                        <label>Tiến độ hoàn thành (@chitieu.Chitieu):</label>
+                                                        <input type="hidden" name="idCt[@chitieu.IdCt]" value="@chitieu.IdCt" />
+                                                        <input type="number" class="form-control" name="tienDoHoanThanh[@chitieu.IdCt]" placeholder="Tiến độ hoàn thành" min="0" max="@chitieu.Doanhso" value="0" required>
+                                                    </div>
+                                                }
+
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-lg-12">
+                            <p>Bạn chưa có kế hoạch nào được giao.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+@section scripts{
+    <script>
+
+    </script>
+}

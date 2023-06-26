@@ -9,9 +9,13 @@ public partial class ThamGium
 
     public int IdKh { get; set; }
 
+    public int IdCt { get; set; }
+
     public int? SlHoanthanh { get; set; }
 
     public string? Danhgia { get; set; }
+
+    public virtual ChiTieu IdCtNavigation { get; set; } = null!;
 
     public virtual KeHoachGiaoViec IdKhNavigation { get; set; } = null!;
 

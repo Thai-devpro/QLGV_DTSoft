@@ -7,6 +7,7 @@ using QLGV_DTSoft.ViewModel;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using QLGV_DTSoft.Helper;
+using Microsoft.AspNetCore.Http;
 
 namespace QLGV_DTSoft.Controllers.Auth
 {
@@ -39,11 +40,17 @@ namespace QLGV_DTSoft.Controllers.Auth
 
                 if (isValid)
                 {
+                    loginViewModel.User = await GetUser(loginViewModel.Tennguoidung);
                     // Tạo identity và cookie authentication
                     var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, loginViewModel.Tennguoidung)
-                    // Các claim khác có thể được thêm vào đây
+                    new Claim(ClaimTypes.Name, loginViewModel.User.Hoten)
+                    ,new Claim("idNguoidung", loginViewModel.User.IdNd.ToString())
+                    ,new Claim(ClaimTypes.Role, loginViewModel.User.IdVtNavigation.Tenvaitro)
+                    ,new Claim("idBophan", loginViewModel.User.IdBp.ToString())
+                    ,new Claim("tenBophan", loginViewModel.User.IdBpNavigation.Tenbophan)
+                    ,new Claim("idKhuvuc",  loginViewModel.User.IdBpNavigation.IdKhuvuc.ToString())
+                    ,new Claim("tenKhuvuc", loginViewModel.User.IdBpNavigation.IdKhuvucNavigation.Tenkhuvuc)
                 };
 
                     var claimsIdentity = new ClaimsIdentity(
@@ -58,11 +65,6 @@ namespace QLGV_DTSoft.Controllers.Auth
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
-                    var user = await _context.NguoiDungs.FirstOrDefaultAsync(u => u.Tennguoidung == loginViewModel.Tennguoidung);
-
-                    HttpContext.Session.SetString("tennd", user.Hoten);
-                    HttpContext.Session.SetInt32("idnd", user.IdNd);
-                    HttpContext.Session.SetInt32("vaitro", user.IdVt);
                     return LocalRedirect(loginViewModel.ReturnUrl);
                 }
                 else
@@ -97,6 +99,9 @@ namespace QLGV_DTSoft.Controllers.Auth
             return LocalRedirect("/");
         }
 
-        
+        private async Task<NguoiDung> GetUser(string tennguoidung)
+        {
+            return await _context.NguoiDungs.Include(u => u.IdBpNavigation).ThenInclude(uu => uu.IdKhuvucNavigation).Include(u => u.IdVtNavigation).FirstOrDefaultAsync(u => u.Tennguoidung == tennguoidung);
+        }
     }
 }

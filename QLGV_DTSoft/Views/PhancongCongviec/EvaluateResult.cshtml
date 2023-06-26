@@ -1,0 +1,83 @@
+﻿@model QLGV_DTSoft.ViewModel.EvaluateResultViewModel
+
+@{
+    ViewData["Title"] = "Kết quả đánh giá tự động từng nhân viên trong kế hoạch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="list" class="item-content active">
+    <div class="row">
+        @foreach (var thanhVien in Model.ThanhVien)
+        {
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-center">
+                                    @foreach (var chiTieu in Model.ChiTieu)
+                                    {
+                                        if (thanhVien.SlHoanthanh.HasValue && thanhVien.IdCt == chiTieu.IdCt)
+                                        {
+                                            double min = 0;
+                                            double max = (double)chiTieu.Doanhso;
+                                            double value = thanhVien.SlHoanthanh.Value;
+                                            double percentage = (value - min) / (max - min) * 100;
+
+                                            string progressClass = "circle-progress-" + (@chiTieu.IdCt) + " circle-progress";
+                                            if (percentage <= 25)
+                                            {
+                                                progressClass += " circle-progress-secondary";
+                                            }
+                                            else if (percentage > 25 && percentage <= 70)
+                                            {
+                                                progressClass += " circle-progress-warning";
+                                            }
+                                            else if (percentage > 70)
+                                            {
+                                                progressClass += " circle-progress-success";
+                                            }
+
+                                            <div class="d-flex align-items-center">
+                                                <div id="circle-progress-@thanhVien.IdCt@thanhVien.IdNdNavigation.IdNd" class="@progressClass" data-min-value="@min" data-max-value="@max" data-value="@value" data-type="percent"></div>
+                                            </div>
+                                        }
+                                        
+                                        
+                                    }
+                                    <div class="ml-3">
+                                        <h5 class="mb-1">@thanhVien.IdCtNavigation.Chitieu</h5>
+                                        <h5 class="mb-1">@thanhVien.IdNdNavigation.Hoten</h5>
+                                        <p class="mb-0">Số lượng đã hoàn thành: @(thanhVien.SlHoanthanh.HasValue ? thanhVien.SlHoanthanh.Value.ToString() : "N/A")</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4 text-sm-right mt-3 mt-sm-0">
+                                @{
+                                    string buttonClass;
+                                    switch (thanhVien.Danhgia)
+                                    {
+                                        case "Đạt":
+                                            buttonClass = "btn btn-white text-success link-shadow";
+                                            break;
+                                        case "Chưa đạt":
+                                            buttonClass = "btn btn-white text-warning link-shadow";
+                                            break;
+                                        case "Không đạt":
+                                            buttonClass = "btn btn-white text-secondary link-shadow";
+                                            break;
+                                        default:
+                                            buttonClass = "btn btn-white text-primary link-shadow";
+                                            break;
+                                    }
+                                }
+                                <a class="@buttonClass">@thanhVien.Danhgia</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

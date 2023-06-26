@@ -1,18 +1,13 @@
 ﻿@model IEnumerable<QLGV_DTSoft.Data.KeHoachGiaoViec>
-
 @{
-    ViewData["Title"] = "Danh sách kế hoạch giao việc";
+    ViewData["Title"] = "Danh sách kế hoạch giao việc của bộ phận" + " " + ViewData["tenbophan"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<p>
-    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
-</p>
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="header-title">
-                 
                 </div>
             </div>
             <div class="card-body">
@@ -30,16 +25,15 @@
                                 <th>
                                     Ngày kết thúc
                                 </th>
-                                
-                               
                                 <th>
-                                    Bộ phận phụ trách
+                                    Mô tả kế hoạch
+                                </th>
+                                <th class="text-center">
+                                    Tổng số lượng đã hoàn thành
                                 </th>
                                 <th>
-                                    Năm thực hiện
+                                    Đánh giá tự động
                                 </th>
-                              
-                                
                                 <th></th>
                             </tr>
 
@@ -57,17 +51,18 @@
                                     <td>
                                         @string.Format("{0:dd/MM/yyyy}", item.Ngayketthuc)
                                     </td>
-                                    
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
+                                        @Html.DisplayFor(modelItem => item.Motakh)
+                                    </td>
+                                    <td class="text-center">
+                                        @item.ThamGia.Sum(tg => tg.SlHoanthanh)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.IdKhcvNavigation.NamthuchienFormatted)
+                                        <a class="btn bg-info-light" asp-action="EvaluateResult" asp-route-id="@item.IdKh"><i class="ri-eye-line"></i></a>
                                     </td>
                                     <td>
-                                        <a asp-action="Edit" asp-route-id="@item.IdKh">Sửa</a> |
-                                        <a asp-action="Details" asp-route-id="@item.IdKh">Chi tiết</a> |
-                                        <a asp-action="Delete" asp-route-id="@item.IdKh">Xóa</a>
+                                        <a class="btn bg-secondary-light mr-3 btn-add" onclick="addToPlan(@item.IdKh)" data-target="#addToPlan" data-toggle="modal">Thêm thành viên</a>
+                                        
                                     </td>
                                 </tr>
                             }
@@ -79,4 +74,39 @@
         </div>
     </div>
 </div>
+<div class="modal fade bd-example-modal-lg" role="dialog" aria-modal="true" id="addToPlan">
+    <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-block text-center pb-3 border-bttom">
+                <h3 class="modal-title" id="exampleModalCenterTitle">Thêm thành viên vào kế hoạch giao việc</h3>
+            </div>
+            <div class="modal-body" id="addToPlanModalContent">
+                
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        function addToPlan(id) {
+            $.ajax({
+                url: '@Url.Action("AddtoPlan", "PhancongCongviec")',
+                data: { id: id },
+                type: 'GET',
+                success: function (result) {
+                    // Đặt nội dung nhận được vào phần modal-body
+                    $('#addToPlanModalContent').html(result);
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi');
+                }
+            });
+        }
+    </script>
+}
+
+
+
+   
+
 

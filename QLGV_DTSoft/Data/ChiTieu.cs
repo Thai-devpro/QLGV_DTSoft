@@ -9,11 +9,13 @@ public partial class ChiTieu
 
     public int IdKh { get; set; }
 
-    public string? Tenchitieu { get; set; }
+    public string? Chitieu { get; set; }
 
-    public string? Chitieu1 { get; set; }
+    public int? Doanhso { get; set; }
 
-    public string? Motact { get; set; }
+    public string? Donvitinh { get; set; }
 
     public virtual KeHoachGiaoViec IdKhNavigation { get; set; } = null!;
+
+    public virtual ICollection<ThamGium> ThamGia { get; set; } = new List<ThamGium>();
 }

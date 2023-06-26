@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using QLGV_DTSoft.Data;
 
 namespace QLGV_DTSoft.Controllers
 {
+    [Authorize]
     public class VaiTroesController : Controller
     {
         private readonly DtsoftContext _context;
