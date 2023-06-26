@@ -11,10 +11,11 @@ using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using QLGV_DTSoft.Data;
+using QLGV_DTSoft.Helper;
 
 namespace QLGV_DTSoft.Controllers
 {
-    [Authorize]
+    [CustomAuthorize(3)]
     public class KeHoachCongViecsController : Controller
     {
         private readonly DtsoftContext _context;
@@ -29,11 +30,11 @@ namespace QLGV_DTSoft.Controllers
         // GET: KeHoachCongViecs
         public async Task<IActionResult> Index(string? NamthuchienFormatted)
         {
-            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 3 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+           /* var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 3 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
             if (count == 0)
             {
                 return RedirectToAction("norole", "Home");
-            }
+            }*/
             var nth = _context.KeHoachCongViecs
                 .Select(h => h.NamthuchienFormatted)
                 .Distinct()

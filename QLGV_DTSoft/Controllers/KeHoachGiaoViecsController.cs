@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using QLGV_DTSoft.Data;
+using QLGV_DTSoft.Helper;
 
 namespace QLGV_DTSoft.Controllers
 {
-    [Authorize]
+    [CustomAuthorize(4)]
     public class KeHoachGiaoViecsController : Controller
     {
         private readonly DtsoftContext _context;
@@ -26,11 +27,11 @@ namespace QLGV_DTSoft.Controllers
         // GET: KeHoachGiaoViecs
         public async Task<IActionResult> Index()
         {
-            var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 4 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
+            /*var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 4 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
             if (count == 0)
             {
                 return RedirectToAction("norole", "Home");
-            }
+            }*/
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
             int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
 

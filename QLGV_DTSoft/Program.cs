@@ -22,7 +22,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options =>
         {
             options.LoginPath = new PathString("/auth/login");
-           
+            options.AccessDeniedPath = new PathString("/auth/accessdenied");
+            options.ExpireTimeSpan = TimeSpan.Zero;
+            options.SlidingExpiration = false;
         });
 
 var app = builder.Build();

@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QLGV_DTSoft.Data;
+using QLGV_DTSoft.Helper;
 
 namespace QLGV_DTSoft.Controllers
 {
-    [Authorize]
+    [CustomAuthorize(7)]
     public class VaiTroesController : Controller
     {
         private readonly DtsoftContext _context;
