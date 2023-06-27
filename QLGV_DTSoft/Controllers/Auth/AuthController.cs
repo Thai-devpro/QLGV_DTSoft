@@ -52,7 +52,7 @@ namespace QLGV_DTSoft.Controllers.Auth
                     ,new Claim("tenBophan", loginViewModel.User.IdBpNavigation.Tenbophan)
                     ,new Claim("idKhuvuc",  loginViewModel.User.IdBpNavigation.IdKhuvuc.ToString())
                     ,new Claim("tenKhuvuc", loginViewModel.User.IdBpNavigation.IdKhuvucNavigation.Tenkhuvuc)
-                    
+
                 };
 
                     var claimsIdentity = new ClaimsIdentity(
@@ -71,7 +71,7 @@ namespace QLGV_DTSoft.Controllers.Auth
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không hợp lệ.");
+                    ModelState.AddModelError(string.Empty, "Tên người dùng hoặc mật khẩu không đúng.");
                 }
 
             }
