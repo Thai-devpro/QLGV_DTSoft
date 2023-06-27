@@ -9,6 +9,20 @@
         display: inline-block;
         margin-right: 10px;
     }
+
+    .table thead {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    /* Thiết lập màu nền và kiểu cho từng hàng trong bảng */
+    .table tr {
+        background-color: #ffffff;
+    }
+
+    .table-heading {
+        text-align: center;
+    }
 </style>
 <br />
 <div class="rowseach">
@@ -30,29 +44,35 @@
     <div class="col-sm-12">
         <div class="card">
             <div id="Grid">
-                <div class="card-header d-flex justify-content-between">
-                    <div class="header-title">
+                <div >
+                    <div >
                         <h4 class="card-title">@ViewBag.tbkx</h4>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="datatable" class="table data-table table-striped">
+                <div >
+                    <div >
+                        <table style="width: 100%;">
                             <thead>
                                 <tr class="ligth">
-                                    <th>
-                                        Tên tài khoản
+                                    <th style=" border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;">
+                                        Họ tên
                                     </th>
 
-                                    <th>
-                                        Họ tên người dùng
+                                    <th style=" border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;">
+                                        Sô điện thoại
                                     </th>
 
-                                    <th>
+                                    <th style=" border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;">
                                         Bộ phận làm việc
                                     </th>
 
-                                    <th></th>
+                                    
                                 </tr>
 
                             </thead>
@@ -60,23 +80,25 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Tennguoidung)
-                                        </td>
-
-                                        <td>
+                                        <td style=" border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;">
                                             @Html.DisplayFor(modelItem => item.Hoten)
                                         </td>
 
-                                        <td>
+                                        <td style=" border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;">
+                                            @Html.DisplayFor(modelItem => item.Sodienthoai)
+                                        </td>
+
+                                        <td style=" border: 1px solid #dddddd;
+                text-align: center;
+                padding: 8px;">
                                             @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
                                         </td>
 
-                                        <td>
-                                            <input type="button" style="width:90px;" class="btn btn-primary" value="Chi tiết" onclick="location.href='@Url.Action("Details", new { id = item.IdNd })'" />
-                                           
-
-                                        </td>
+                                        
                                     </tr>
                                 }
                             </tbody>

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using QLGV_DTSoft.Data;
 using QLGV_DTSoft.Helper;
 using SautinSoft.Document;
+using SautinSoft.Document.Drawing;
 
 namespace QLGV_DTSoft.Controllers
 {
@@ -34,15 +35,57 @@ namespace QLGV_DTSoft.Controllers
             string input = Path.Combine(path, "html1.html");
             string output = Path.Combine(path, "Danhsachnguoidung.docx");
             System.IO.File.WriteAllText(input, GridHtml);
-            DocumentCore documentCore = DocumentCore.Load(input, new HtmlLoadOptions());
-            documentCore.Save(output);
+
+            DocumentCore dc = new DocumentCore();
+            DocumentBuilder db = new DocumentBuilder(dc);
+         // Thêm văn bản trước khi tải HTML
+            db.CharacterFormat.FontName = "Verdana";
+            db.CharacterFormat.Size = 16f;
+            db.CharacterFormat.AllCaps = true;
+            db.CharacterFormat.Italic = true;
+            db.CharacterFormat.FontColor = Color.Orange;
+            db.Write("Công ty phần mềm DTSoft");
+            db.InsertSpecialCharacter(SpecialCharacterType.LineBreak);
+            db.CharacterFormat.Size = 13f;
+            db.CharacterFormat.FontColor = Color.Blue;
+            db.CharacterFormat.AllCaps = false;
+            db.CharacterFormat.Italic = false;
+            db.Write("Phần mềm hiệu quả");
+            db.InsertSpecialCharacter(SpecialCharacterType.LineBreak);
+            db.CharacterFormat.Size = 13f;
+            db.CharacterFormat.FontColor = Color.Black;
+            db.CharacterFormat.AllCaps = false;
+            db.CharacterFormat.Italic = false;
+            db.ParagraphFormat.Alignment = HorizontalAlignment.Center;
+            db.Write("Báo cáo");
+
+            // Tải HTML vào tài liệu
+            db.InsertHtml(GridHtml);
+
+            db.CharacterFormat.Size = 13f;
+            db.CharacterFormat.FontColor = Color.Black;
+            db.CharacterFormat.AllCaps = false;
+            db.CharacterFormat.Italic = false;
+            db.Write("Ngày lập báo cáo: "+ DateTime.Now);
+            db.InsertSpecialCharacter(SpecialCharacterType.LineBreak);
+            db.Write("Người lập: " + User.Identity.Name);
+            db.InsertSpecialCharacter(SpecialCharacterType.LineBreak);
+            db.CharacterFormat.AllCaps = false;
+            db.CharacterFormat.Italic = true;
+            db.Write("(Ký và ghi rõ họ tên)");
+           
+
+            // Lưu tài liệu thành file DOCX
+            dc.Save(output);
             byte[] bytes = System.IO.File.ReadAllBytes(output);
 
+            // Xóa thư mục tạm
             Directory.Delete(path, true);
 
             return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Danhsachnguoidung.docx");
         }
-        // GET: Ketxuat
+
+       
         public async Task<IActionResult> Index(int? idbp, int? idct, string? kq)
         {
             /*var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 8 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
@@ -110,6 +153,7 @@ namespace QLGV_DTSoft.Controllers
                     return View(await nguoiDungTheoChitieu.ToListAsync());
                 }
             }
+            ViewBag.tbkx = "Danh sách nhân viên";
             var dtsoftContext = _context.NguoiDungs.Include(n => n.IdBpNavigation).Include(n => n.IdVtNavigation);
             return View(await dtsoftContext.ToListAsync());
         }
