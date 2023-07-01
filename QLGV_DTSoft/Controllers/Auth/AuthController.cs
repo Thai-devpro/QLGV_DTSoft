@@ -8,15 +8,18 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using QLGV_DTSoft.Helper;
 using Microsoft.AspNetCore.Http;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace QLGV_DTSoft.Controllers.Auth
 {
     public class AuthController : Controller
     {
         private readonly DtsoftContext _context;
-        public AuthController(DtsoftContext context)
+        private readonly INotyfService _toastNotification;
+        public AuthController(DtsoftContext context, INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
 
         public IActionResult Index()
@@ -43,7 +46,7 @@ namespace QLGV_DTSoft.Controllers.Auth
                     loginViewModel.User = await GetUser(loginViewModel.Tennguoidung);
                     // Tạo identity và cookie authentication
                     var claims = new List<Claim>
-                {
+                    {
                     new Claim(ClaimTypes.Name, loginViewModel.User.Hoten)
                     ,new Claim("idNguoidung", loginViewModel.User.IdNd.ToString())
                     ,new Claim(ClaimTypes.Role, loginViewModel.User.IdVtNavigation.Tenvaitro)
@@ -52,14 +55,14 @@ namespace QLGV_DTSoft.Controllers.Auth
                     ,new Claim("tenBophan", loginViewModel.User.IdBpNavigation.Tenbophan)
                     ,new Claim("idKhuvuc",  loginViewModel.User.IdBpNavigation.IdKhuvuc.ToString())
                     ,new Claim("tenKhuvuc", loginViewModel.User.IdBpNavigation.IdKhuvucNavigation.Tenkhuvuc)
-                    
-                };
+                    };
 
                     var claimsIdentity = new ClaimsIdentity(
                         claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var authProperties = new AuthenticationProperties
                     {
+
                         // Cấu hình thuộc tính của cookie authentication (nếu cần thiết)
                     };
 
@@ -67,14 +70,14 @@ namespace QLGV_DTSoft.Controllers.Auth
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
+
+                    _toastNotification.Success("Đăng nhập thành công");
                     return LocalRedirect(loginViewModel.ReturnUrl);
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không hợp lệ.");
-                }
-
+                _toastNotification.Error("Đăng nhập thất bại");
+                ModelState.AddModelError(string.Empty, "Tên người dùng hoặc mật khẩu không đúng.");
             }
+            
             return View();
         }
 
@@ -95,9 +98,10 @@ namespace QLGV_DTSoft.Controllers.Auth
 
         public async Task<IActionResult> LogOut()
         {
-            
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _toastNotification.Information("Đăng xuất thành công");
             HttpContext.Session.Clear();
+            
             return LocalRedirect("/");
         }
 

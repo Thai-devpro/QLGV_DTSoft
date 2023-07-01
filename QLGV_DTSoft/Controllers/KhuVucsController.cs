@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,10 +17,12 @@ namespace QLGV_DTSoft.Controllers
     public class KhuVucsController : Controller
     {
         private readonly DtsoftContext _context;
+        private readonly INotyfService _toastNotification;
 
-        public KhuVucsController(DtsoftContext context)
+        public KhuVucsController(DtsoftContext context,INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification; 
         }
 
         // GET: KhuVucs
@@ -70,6 +73,7 @@ namespace QLGV_DTSoft.Controllers
             {
                 _context.Add(khuVuc);
                 await _context.SaveChangesAsync();
+                _toastNotification.Success("Thêm thành công");
                 return RedirectToAction(nameof(Index));
             }
             return View(khuVuc);
@@ -109,6 +113,7 @@ namespace QLGV_DTSoft.Controllers
                 {
                     _context.Update(khuVuc);
                     await _context.SaveChangesAsync();
+                    _toastNotification.Information("Cập nhật thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -160,6 +165,7 @@ namespace QLGV_DTSoft.Controllers
             }
             
             await _context.SaveChangesAsync();
+            _toastNotification.Information("Xóa thành công");
             return RedirectToAction(nameof(Index));
         }
 

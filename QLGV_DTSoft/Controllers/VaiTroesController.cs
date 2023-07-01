@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,10 +17,12 @@ namespace QLGV_DTSoft.Controllers
     public class VaiTroesController : Controller
     {
         private readonly DtsoftContext _context;
+        private readonly INotyfService _toastNotification;
 
-        public VaiTroesController(DtsoftContext context)
+        public VaiTroesController(DtsoftContext context ,INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification; 
         }
 
         // GET: VaiTroes
@@ -36,15 +39,7 @@ namespace QLGV_DTSoft.Controllers
         }
         public async Task<IActionResult> ThemQuyen(int id)
         {
-            //if (HttpContext.Session.GetInt32("idtv") == null)
-            //{
-            //    return RedirectToAction("Login", "ThanhVien");
-            //}
-            //var count = _context.Quyens.Where(c => c.MaCn == 9 && c.MaCv == HttpContext.Session.GetInt32("cvtv")).Count();
-            //if (count == 0)
-            //{
-            //    return RedirectToAction("norole", "Home");
-            //}
+
             var vaitro = _context.VaiTros.Find(id);
             if (vaitro == null)
             {
@@ -90,7 +85,7 @@ namespace QLGV_DTSoft.Controllers
             }
 
             await _context.SaveChangesAsync();
-
+            _toastNotification.Information("Cập nhật thành công các quyền của vai trò " + chucvu.Tenvaitro);
             return RedirectToAction(nameof(Index));
         }
 
@@ -129,6 +124,7 @@ namespace QLGV_DTSoft.Controllers
             {
                 _context.Add(vaiTro);
                 await _context.SaveChangesAsync();
+                _toastNotification.Success("Thêm thành công");
                 return RedirectToAction(nameof(Index));
             }
             return View(vaiTro);
@@ -168,6 +164,7 @@ namespace QLGV_DTSoft.Controllers
                 {
                     _context.Update(vaiTro);
                     await _context.SaveChangesAsync();
+                    _toastNotification.Information("Cập nhật thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -215,10 +212,17 @@ namespace QLGV_DTSoft.Controllers
             var vaiTro = await _context.VaiTros.FindAsync(id);
             if (vaiTro != null)
             {
+                var quyenTruycaps = _context.CoQuyenTruyCaps.Where(q => q.IdVt == id).ToList();
+                if (quyenTruycaps.Count > 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Vui lòng xóa các quyền liên quan đến vai trò trước khi xóa vai trò này.");
+                    return View(vaiTro);
+                }
                 _context.VaiTros.Remove(vaiTro);
             }
             
             await _context.SaveChangesAsync();
+            _toastNotification.Information("Xóa thành công");
             return RedirectToAction(nameof(Index));
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,20 +19,17 @@ namespace QLGV_DTSoft.Controllers
     public class KeHoachGiaoViecsController : Controller
     {
         private readonly DtsoftContext _context;
+        private readonly INotyfService _toastNotification;
 
-        public KeHoachGiaoViecsController(DtsoftContext context)
+        public KeHoachGiaoViecsController(DtsoftContext context, INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
 
         // GET: KeHoachGiaoViecs
         public async Task<IActionResult> Index()
         {
-            /*var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 4 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
-            if (count == 0)
-            {
-                return RedirectToAction("norole", "Home");
-            }*/
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
             int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
 
@@ -64,9 +62,28 @@ namespace QLGV_DTSoft.Controllers
         // GET: KeHoachGiaoViecs/Create
         public IActionResult Create()
         {
-            ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan");
-            ViewData["IdKhcv"] = new SelectList(_context.KeHoachCongViecs, "IdKhcv", "NamthuchienFormatted");
-            return View();
+            int? loggedInUserKhuvucId = UserHelper.GetLoggedInUserKhuvucId(User);
+
+            if (loggedInUserKhuvucId.HasValue)
+            {
+                int khuvucId = loggedInUserKhuvucId.Value;
+                var khuvuc = _context.KhuVucs.FirstOrDefault(k => k.IdKhuvuc == khuvucId);
+
+                if (khuvuc != null)
+                {
+                    ViewData["IdBp"] = new SelectList(_context.BoPhans.Where(n => n.IdKhuvuc == khuvucId), "IdBp", "Tenbophan");
+                    var keHoachCongViecs = _context.KeHoachCongViecs.ToList();
+                    var selectListItems = keHoachCongViecs.Select(khcv => new SelectListItem
+                    {
+                        Value = khcv.IdKhcv.ToString(),
+                        Text = $"{khcv.NamthuchienFormatted} - {khcv.Noidungcongviec}"
+                    });
+
+                    ViewData["IdKhcv"] = new SelectList(selectListItems, "Value", "Text");
+                    return View();
+                }
+            }
+            return NotFound();
         }
 
         // POST: KeHoachGiaoViecs/Create
@@ -76,25 +93,45 @@ namespace QLGV_DTSoft.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdKh,IdBp,IdKhcv,Tenkehoach,Ngaybatdau,Ngayketthuc,Motakh,Ngaytaokh")] KeHoachGiaoViec keHoachGiaoViec, string chitieuList)
         {
-            if (ModelState.IsValid)
+            int? loggedInUserKhuvucId = UserHelper.GetLoggedInUserKhuvucId(User);
+
+            if (loggedInUserKhuvucId.HasValue)
             {
-                // Deserialize danh sách chỉ tiêu từ chuỗi JSON
-                List<ChiTieu> chiTieus = JsonConvert.DeserializeObject<List<ChiTieu>>(chitieuList);
+                int khuvucId = loggedInUserKhuvucId.Value;
+                var khuvuc = _context.KhuVucs.FirstOrDefault(k => k.IdKhuvuc == khuvucId);
 
-                // Gán danh sách chỉ tiêu cho kế hoạch giao việc
-                keHoachGiaoViec.ChiTieus = chiTieus;
+                if (khuvuc != null)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        // Deserialize danh sách chỉ tiêu từ chuỗi JSON
+                        List<ChiTieu> chiTieus = JsonConvert.DeserializeObject<List<ChiTieu>>(chitieuList);
 
-                // Lưu kế hoạch giao việc và danh sách chỉ tiêu vào database
-                _context.Add(keHoachGiaoViec);
-                await _context.SaveChangesAsync();
+                        // Gán danh sách chỉ tiêu cho kế hoạch giao việc
+                        keHoachGiaoViec.ChiTieus = chiTieus;
 
-                return RedirectToAction(nameof(Index));
+                        // Lưu kế hoạch giao việc và danh sách chỉ tiêu vào database
+                        _context.Add(keHoachGiaoViec);
+                        await _context.SaveChangesAsync();
+                        _toastNotification.Success("Thêm kế hoạch giao việc thành công");
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    ViewData["IdBp"] = new SelectList(_context.BoPhans.Where(kv => kv.IdKhuvuc == khuvucId), "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
+                    var keHoachCongViecs = _context.KeHoachCongViecs.ToList();
+                    var selectListItems = keHoachCongViecs.Select(khcv => new SelectListItem
+                    {
+                        Value = khcv.IdKhcv.ToString(),
+                        Text = $"{khcv.NamthuchienFormatted} - {khcv.Noidungcongviec}",
+                        Selected = khcv.IdKhcv == keHoachGiaoViec.IdKhcv
+                    });
+
+                    ViewData["IdKhcv"] = new SelectList(selectListItems, "Value", "Text");
+
+                    return View(keHoachGiaoViec);
+                }
             }
-
-            ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
-            ViewData["IdKhcv"] = new SelectList(_context.KeHoachCongViecs, "IdKhcv", "NamthuchienFormatted", keHoachGiaoViec.IdKhcv);
-
-            return View(keHoachGiaoViec);
+            return NotFound();
         }
 
 
@@ -105,8 +142,6 @@ namespace QLGV_DTSoft.Controllers
             {
                 return NotFound();
             }
-
-            
             var keHoachGiaoViec = await _context.KeHoachGiaoViecs
                 
                 .Include(k => k.ChiTieus)
@@ -115,9 +150,30 @@ namespace QLGV_DTSoft.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
-            ViewData["IdKhcv"] = new SelectList(_context.KeHoachCongViecs, "IdKhcv", "NamthuchienFormatted", keHoachGiaoViec.IdKhcv);
-            return View(keHoachGiaoViec);
+            int? loggedInUserKhuvucId = UserHelper.GetLoggedInUserKhuvucId(User);
+
+            if (loggedInUserKhuvucId.HasValue)
+            {
+                int khuvucId = loggedInUserKhuvucId.Value;
+                var khuvuc = _context.KhuVucs.FirstOrDefault(k => k.IdKhuvuc == khuvucId);
+
+                if (khuvuc != null)
+                {
+                    ViewData["IdBp"] = new SelectList(_context.BoPhans.Where(kv => kv.IdKhuvuc == khuvucId), "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
+                   
+                    var keHoachCongViecs = _context.KeHoachCongViecs.ToList();
+                    var selectListItems = keHoachCongViecs.Select(khcv => new SelectListItem
+                    {
+                        Value = khcv.IdKhcv.ToString(),
+                        Text = $"{khcv.NamthuchienFormatted} - {khcv.Noidungcongviec}",
+                        Selected = khcv.IdKhcv == keHoachGiaoViec.IdKhcv
+                    });
+
+                    ViewData["IdKhcv"] = new SelectList(selectListItems, "Value", "Text");
+                    return View(keHoachGiaoViec);
+                }
+            }
+            return NotFound();
         }
 
         // POST: KeHoachGiaoViecs/Edit/5
@@ -131,61 +187,76 @@ namespace QLGV_DTSoft.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            int? loggedInUserKhuvucId = UserHelper.GetLoggedInUserKhuvucId(User);
+            if (loggedInUserKhuvucId.HasValue)
             {
-                try
+                int khuvucId = loggedInUserKhuvucId.Value;
+                var khuvuc = _context.KhuVucs.FirstOrDefault(k => k.IdKhuvuc == khuvucId);
+
+                if (khuvuc != null)
                 {
-                    // Deserialize danh sách chỉ tiêu từ chuỗi JSON
-                    List<ChiTieu> chiTieus = JsonConvert.DeserializeObject<List<ChiTieu>>(chitieuList);
-
-                    // Lấy danh sách các chỉ tiêu hiện có trong kế hoạch giao việc
-                    List<ChiTieu> existingChiTieus = _context.ChiTieus.Where(c => c.IdKh == keHoachGiaoViec.IdKh).ToList();
-
-                    // Cập nhật thông tin các chỉ tiêu
-                    foreach (var chitieu in chiTieus)
+                    if (ModelState.IsValid)
                     {
-                        // Kiểm tra xem chỉ tiêu đã tồn tại trong danh sách hiện có hay chưa
-                        var existingChitieu = existingChiTieus.FirstOrDefault(c => c.IdCt == chitieu.IdCt);
-
-                        if (existingChitieu != null)
+                        try
                         {
-                            // Cập nhật các thuộc tính của chỉ tiêu đã tồn tại
-                            existingChitieu.Chitieu = chitieu.Chitieu;
-                            existingChitieu.Doanhso = chitieu.Doanhso;
-                            existingChitieu.Donvitinh = chitieu.Donvitinh;
+                            // Deserialize danh sách chỉ tiêu từ chuỗi JSON
+                            List<ChiTieu> chiTieus = JsonConvert.DeserializeObject<List<ChiTieu>>(chitieuList);
 
-                            _context.Update(existingChitieu);
+                            // Lấy danh sách các chỉ tiêu hiện có trong kế hoạch giao việc
+                            List<ChiTieu> existingChiTieus = _context.ChiTieus.Where(c => c.IdKh == keHoachGiaoViec.IdKh).ToList();
+
+                            // Cập nhật thông tin các chỉ tiêu
+                            foreach (var chitieu in chiTieus)
+                            {
+                                // Kiểm tra xem chỉ tiêu đã tồn tại trong danh sách hiện có hay chưa
+                                var existingChitieu = existingChiTieus.FirstOrDefault(c => c.IdCt == chitieu.IdCt);
+
+                                if (existingChitieu != null)
+                                {
+                                    // Cập nhật các thuộc tính của chỉ tiêu đã tồn tại
+                                    existingChitieu.Chitieu = chitieu.Chitieu;
+                                    existingChitieu.Doanhso = chitieu.Doanhso;
+                                    existingChitieu.Donvitinh = chitieu.Donvitinh;
+
+                                    _context.Update(existingChitieu);
+                                }
+
+                            }
+
+                            // Cập nhật thông tin kế hoạch giao việc
+                            _context.Update(keHoachGiaoViec);
+                            await _context.SaveChangesAsync();
+                            _toastNotification.Information("Cập nhật thành công");
+
                         }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!KeHoachGiaoViecExists(keHoachGiaoViec.IdKh))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                        return RedirectToAction(nameof(Index));
                     }
-
-                    // Cập nhật thông tin kế hoạch giao việc
-                    _context.Update(keHoachGiaoViec);
-
-                    await _context.SaveChangesAsync();
-
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!KeHoachGiaoViecExists(keHoachGiaoViec.IdKh))
+                    var keHoachGiaoViecEdit = await _context.KeHoachGiaoViecs.Include(k => k.ChiTieus).FirstOrDefaultAsync(m => m.IdKh == id);
+                    ViewData["IdBp"] = new SelectList(_context.BoPhans.Where(kv => khuvuc.IdKhuvuc == khuvucId), "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
+                    var keHoachCongViecs = _context.KeHoachCongViecs.ToList();
+                    var selectListItems = keHoachCongViecs.Select(khcv => new SelectListItem
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        Value = khcv.IdKhcv.ToString(),
+                        Text = $"{khcv.NamthuchienFormatted} - {khcv.Noidungcongviec}",
+                        Selected = khcv.IdKhcv == keHoachGiaoViec.IdKhcv
+                    });
+                    ViewData["IdKhcv"] = new SelectList(selectListItems, "Value", "Text");
+                    return View(keHoachGiaoViecEdit);
                 }
-                return RedirectToAction(nameof(Index));
             }
-
-            ViewData["IdBp"] = new SelectList(_context.BoPhans, "IdBp", "Tenbophan", keHoachGiaoViec.IdBp);
-            ViewData["IdKhcv"] = new SelectList(_context.KeHoachCongViecs, "IdKhcv", "NamthuchienFormatted", keHoachGiaoViec.IdKhcv);
-            return View(keHoachGiaoViec);
+            return NotFound();
         }
-
-
-
 
         // GET: KeHoachGiaoViecs/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -219,10 +290,17 @@ namespace QLGV_DTSoft.Controllers
             var keHoachGiaoViec = await _context.KeHoachGiaoViecs.FindAsync(id);
             if (keHoachGiaoViec != null)
             {
+                var chiTieus = _context.ChiTieus.Where(ct => ct.IdKh == id).ToList();
+                if (chiTieus.Count > 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Vui lòng xóa các chỉ tiêu liên quan trước khi xóa kế hoạch giao việc.");
+                    return View(keHoachGiaoViec);
+                }
                 _context.KeHoachGiaoViecs.Remove(keHoachGiaoViec);
             }
             
             await _context.SaveChangesAsync();
+            _toastNotification.Information("Xóa thành công");
             return RedirectToAction(nameof(Index));
         }
 
@@ -248,8 +326,8 @@ namespace QLGV_DTSoft.Controllers
             
                 _context.ChiTieus.Remove(chitieu);
                 _context.SaveChanges();
+                _toastNotification.Information("Xóa chỉ tiêu " + chitieu.Chitieu + " thành công");
 
-            
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -275,11 +353,9 @@ namespace QLGV_DTSoft.Controllers
 
                 _context.Add(chiTieu);
                 await _context.SaveChangesAsync();
-            
+                _toastNotification.Information("Thêm chỉ tiêu thành công");
                 return Ok();
             }
-
-           
             return BadRequest("Danh sách chỉ tiêu mới trống");
         }
 

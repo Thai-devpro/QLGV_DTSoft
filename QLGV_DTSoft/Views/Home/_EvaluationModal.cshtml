@@ -1,0 +1,23 @@
+﻿@model List<QLGV_DTSoft.ViewModel.EvaluationResultById>
+<div class="modal-header">
+    <h5 class="modal-title" id="evaluationModalLabel">Đánh giá kết quả dựa trên các chỉ tiêu</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <!-- Nội dung đánh giá -->
+    @foreach (var evaluationResult in Model)
+    {
+        <p>
+            <strong>Chỉ tiêu:</strong> @evaluationResult.ChiTieu<br />
+            <strong>Doanh số:</strong> @evaluationResult.DoanhSo<br />
+            <strong>Số lượng đã hoàn thành:</strong> @evaluationResult.SlHoanthanh<br />
+            <strong>Tỷ lệ hoàn thành:</strong> @evaluationResult.TiLeHoanThanh<br />
+            <strong>Đánh giá:</strong> @evaluationResult.DanhGia
+        </p>
+    }
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+</div>

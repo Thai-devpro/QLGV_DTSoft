@@ -27,7 +27,6 @@
 
     
 </style>
-<hr />
 <div class="card">
     <div class="card-header d-flex justify-content-between">
         <div class="header-title">
@@ -82,20 +81,20 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label class="control-label">Chỉ tiêu</label>
-                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'doanhso-input')" />
+                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'doanhso-input')" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để tiếp tục" />
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="form-group">
                         <label class="control-label">Doanh số</label>
-                        <input class="form-control" type="number" id="doanhso-input" placeholder="Nhập doanh số" onkeydown="checkEnter(event, 'dvt-input')" disabled />
+                        <input class="form-control" type="number" id="doanhso-input" placeholder="Nhập doanh số" onkeydown="checkEnter(event, 'dvt-input')" disabled data-toggle="tooltip" data-placement="top" title="Nhấn Enter để tiếp tục" />
                     </div>
                 </div>
                 
                 <div class="col-4">
                     <div class="form-group">
                         <label class="control-label">Đơn vị tính</label>
-                        <input class="form-control" type="text" id="dvt-input" placeholder="Nhập đơn vị tính" onkeydown="addChitieu(event)" disabled />
+                        <input class="form-control" type="text" id="dvt-input" placeholder="Nhập đơn vị tính" onkeydown="addChitieu(event)" disabled data-toggle="tooltip" data-placement="top" title="Nhấn Enter để tiếp tục" />
                     </div>
                 </div>
             </div>
@@ -148,7 +147,7 @@
                     const chitieuListDiv = document.getElementById("chitieu-list");
                     const listItem = document.createElement("div");
                     listItem.classList.add("list-group-item");
-                    listItem.innerHTML = `${chitieu} | ${doanhso} | ${donvitinh} <span onclick="removeChitieu(event)"><i class="fa fa-trash"></i></span>`;
+                    listItem.innerHTML = `${chitieu} - ${doanhso} - ${donvitinh} <span onclick="removeChitieu(event)"><i class="fa fa-trash"></i></span>`;
                     chitieuListDiv.appendChild(listItem);
 
                     // Xóa dữ liệu trong các input và tắt chế độ chỉnh sửa

@@ -15,7 +15,7 @@ public partial class ChiTieu
 
     public string? Donvitinh { get; set; }
 
-    public virtual KeHoachGiaoViec IdKhNavigation { get; set; } = null!;
+    public virtual KeHoachGiaoViec? IdKhNavigation { get; set; }
 
     public virtual ICollection<ThamGium> ThamGia { get; set; } = new List<ThamGium>();
 }

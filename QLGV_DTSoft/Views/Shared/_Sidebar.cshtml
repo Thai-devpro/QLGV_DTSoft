@@ -89,6 +89,7 @@
                                 <i class="ri-shield-user-line"></i>
                                 <span class="ml-4">Quản lý vai trò</span>
                             </a>
+                            
                         </li>
                     }
                     var count8 = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 8 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
@@ -99,11 +100,9 @@
                                 <i class="ri-printer-line"></i>
                                 <span class="ml-4">Kết xuất</span>
                             </a>
+                            
                         </li>
-                    }
-                   
-                   
-                    
+                    } 
                 }
             </ul>
         </nav>

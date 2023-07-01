@@ -18,8 +18,7 @@
       <link rel="stylesheet" href="~/assets/vendor/tui-calendar/tui-date-picker/dist/tui-date-picker.css">
       <link rel="stylesheet" href="~/assets/vendor/tui-calendar/tui-time-picker/dist/tui-time-picker.css">
 
-      <link rel="stylesheet" href="~/assets/font/fontawesome/css/all.css">    
-
+      
   </head>
   <body class="  ">
     <div class="wrapper">
@@ -61,5 +60,6 @@
     <script src="~/assets/vendor/moment.min.js"></script>
 
     @RenderSection("scripts", required: false)
+    @await Component.InvokeAsync("Notyf")
   </body>
 </html>

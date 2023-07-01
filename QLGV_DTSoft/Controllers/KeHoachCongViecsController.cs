@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,12 +20,14 @@ namespace QLGV_DTSoft.Controllers
     public class KeHoachCongViecsController : Controller
     {
         private readonly DtsoftContext _context;
+        private readonly INotyfService _toastNotification;
 
         public string IdKhcv { get; private set; }
 
-        public KeHoachCongViecsController(DtsoftContext context)
+        public KeHoachCongViecsController(DtsoftContext context , INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
 
         // GET: KeHoachCongViecs
@@ -113,6 +116,7 @@ namespace QLGV_DTSoft.Controllers
             }
             _context.Add(keHoachCongViec);
                 await _context.SaveChangesAsync();
+            _toastNotification.Success("Thêm thành công");
                 return RedirectToAction(nameof(Index));
           
             return View(keHoachCongViec);
@@ -166,6 +170,7 @@ namespace QLGV_DTSoft.Controllers
                 {
                     _context.Update(keHoachCongViec);
                     await _context.SaveChangesAsync();
+                    _toastNotification.Information("Cập nhật thành công kế hoạch công việc " + keHoachCongViec.NamthuchienFormatted);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -213,10 +218,17 @@ namespace QLGV_DTSoft.Controllers
             var keHoachCongViec = await _context.KeHoachCongViecs.FindAsync(id);
             if (keHoachCongViec != null)
             {
+                var keHoachGiaoViecs = _context.KeHoachGiaoViecs.Where(khv => khv.IdKhcv == id).ToList();
+                if (keHoachGiaoViecs.Count > 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Vui lòng xóa các kế hoạch giao việc liên quan trước khi xóa kế hoạch công việc.");
+                    return View(keHoachCongViec);
+                }
                 _context.KeHoachCongViecs.Remove(keHoachCongViec);
             }
             
             await _context.SaveChangesAsync();
+            _toastNotification.Information("Xóa thành công");
             return RedirectToAction(nameof(Index));
         }
 

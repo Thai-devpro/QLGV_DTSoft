@@ -1,51 +1,54 @@
 ﻿@model QLGV_DTSoft.Data.KeHoachGiaoViec
 
 @{
-    ViewData["Title"] = "Chi tiết kế hoạch giao việc có ID:" + @Model.IdKh;
+    ViewData["Title"] = "Chi tiết kế hoạch giao việc " + @Model.Tenkehoach;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<hr />
-
-<div class="row">
-    <div class="col-md-6">
-        <h4>Thông tin chi tiết:</h4>
-        <dl class="row">
-            <dt class="col-sm-4">Tên kế hoạch:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.Tenkehoach)</dd>
-
-            <dt class="col-sm-4">Ngày bắt đầu:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.Ngaybatdau)</dd>
-
-            <dt class="col-sm-4">Ngày kết thúc:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.Ngayketthuc)</dd>
-
-            <dt class="col-sm-4">Mô tả kế hoạch:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.Motakh)</dd>
-
-            <dt class="col-sm-4">Ngày tạo kế hoạch:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.Ngaytaokh)</dd>
-
-            <dt class="col-sm-4">Bộ phận phụ trách:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.IdBpNavigation.Tenbophan)</dd>
-
-            <dt class="col-sm-4">Năm thực hiện:</dt>
-            <dd class="col-sm-8">@Html.DisplayFor(model => model.IdKhcvNavigation.NamthuchienFormatted)</dd>
-        </dl>
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            <h4 class="card-title">@ViewData["Title"]</h4>
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h4>Các chỉ tiêu:</h4>
-        <ul>
-            @foreach (var chitieu in Model.ChiTieus)
-            {
-                <li>@chitieu.Chitieu (@chitieu.Doanhso / @chitieu.Donvitinh)</li>
-            }
-        </ul>
+    <div class="card-body">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Tên kế hoạch:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Tenkehoach)</dd>
+
+                <dt class="col-sm-4">Ngày bắt đầu:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Ngaybatdau)</dd>
+
+                <dt class="col-sm-4">Ngày kết thúc:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Ngayketthuc)</dd>
+
+                <dt class="col-sm-4">Mô tả kế hoạch:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Motakh)</dd>
+
+                <dt class="col-sm-4">Ngày tạo kế hoạch:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Ngaytaokh)</dd>
+
+                <dt class="col-sm-4">Bộ phận phụ trách:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.IdBpNavigation.Tenbophan)</dd>
+
+                <dt class="col-sm-4">Năm thực hiện:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.IdKhcvNavigation.NamthuchienFormatted)</dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <h4>Các chỉ tiêu:</h4>
+            <ul>
+                @foreach (var chitieu in Model.ChiTieus)
+                {
+                    <li>@chitieu.Chitieu (@chitieu.Doanhso / @chitieu.Donvitinh)</li>
+                }
+            </ul>
+        </div>
     </div>
 </div>
-
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.IdKh" class="btn btn-success">Chỉnh sửa</a> |
-    <a asp-action="Index" class="btn btn-primary">Trở về danh sách</a>
+    <a asp-action="Index">Trở về danh sách</a>
 </div>

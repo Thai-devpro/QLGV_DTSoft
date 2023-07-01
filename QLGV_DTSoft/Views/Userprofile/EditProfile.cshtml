@@ -1,59 +1,56 @@
-﻿@model QLGV_DTSoft.Data.NguoiDung
+﻿@using System.Security.Claims
+
+@model QLGV_DTSoft.Data.NguoiDung
 
 @{
-    ViewData["Title"] = "Thêm người dùng";
+    ViewData["Title"] = "Cập nhật thông tin tài khoản";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="card">
     <div class="card-header d-flex justify-content-between">
         <div class="header-title">
-            <h4 class="card-title">Thêm người dùng</h4>
+            <h4 class="card-title">@ViewData["Title"]: @Model.Hoten</h4>
         </div>
     </div>
     <div class="card-body">
-        <form asp-action="Create">
+        <form asp-action="EditProfile">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdNd" />
             <div class="row">
                 <div class="col">
                     <div class="form-group">
                         <label asp-for="IdVt" class="control-label">Vai trò</label>
-                        <select asp-for="IdVt" class="form-control" asp-items="ViewBag.IdVt"></select>
+                        <select asp-for="IdVt" class="form-control" asp-items="ViewBag.IdVt" disabled></select>
                         <span asp-validation-for="IdVt" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label asp-for="IdBp" class="control-label">Bộ phận</label>
-                        <select asp-for="IdBp" class="form-control" asp-items="ViewBag.IdBp"></select>
+                        <select asp-for="IdBp" class="form-control" asp-items="ViewBag.IdBp" disabled></select>
                         <span asp-validation-for="IdBp" class="text-danger"></span>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="Tennguoidung" class="control-label">Tên người dùng</label>
+                <label asp-for="Tennguoidung" class="control-label">Tên đăng nhập</label>
                 <input asp-for="Tennguoidung" class="form-control" />
                 <span asp-validation-for="Tennguoidung" class="text-danger"></span>
             </div>
-
+            <input type="hidden" asp-for="Matkhau" />
             <div class="form-group">
                 <label asp-for="Hoten" class="control-label">Họ tên</label>
                 <input asp-for="Hoten" class="form-control" />
                 <span asp-validation-for="Hoten" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="Ngaysinh" class="control-label">Ngày sinh</label>
                 <input asp-for="Ngaysinh" class="form-control" />
                 <span asp-validation-for="Ngaysinh" class="text-danger"></span>
             </div>
-
-
             <div class="form-group">
                 <label asp-for="Gioitinh" class="control-label">Giới tính</label>
-                <select asp-for="Gioitinh" class="form-control">
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                </select>
+                <input asp-for="Gioitinh" class="form-control" />
                 <span asp-validation-for="Gioitinh" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -62,9 +59,9 @@
                 <span asp-validation-for="Sodienthoai" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label">Email</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="Quequan" class="control-label">Quê quán</label>
+                <input asp-for="Quequan" class="form-control" />
+                <span asp-validation-for="Quequan" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Diachi" class="control-label">Địa chỉ</label>
@@ -72,37 +69,26 @@
                 <span asp-validation-for="Diachi" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Quequan" class="control-label">Quê quán</label>
-                <input asp-for="Quequan" class="form-control" />
-                <span asp-validation-for="Quequan" class="text-danger"></span>
+                <label asp-for="Email" class="control-label"> </label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Ngaybatdaulam" class="control-label">Ngày bắt đầu làm việc</label>
-                <input asp-for="Ngaybatdaulam" class="form-control" id="Ngaybatdaulam" />
+                <label asp-for="Ngaybatdaulam" class="control-label">Ngày bắt đầu làm</label>
+                <input asp-for="Ngaybatdaulam" class="form-control" disabled />
                 <span asp-validation-for="Ngaybatdaulam" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Thamnien" class=" control-label">Thâm niên (Năm)</label>
-                <input asp-for="Thamnien" class="form-control" id="Thamnien"/>
+                <label asp-for="Thamnien" class="control-label">Thâm niên</label>
+                <input asp-for="Thamnien" class="form-control" disabled />
                 <span asp-validation-for="Thamnien" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Thêm" class="btn btn-success" />
+                <input type="submit" value="Lưu" class="btn btn-success" />
+                <input type="button" class="btn btn-primary ml-2" value="Đổi mật khẩu" onclick="location.href='@Url.Action("EditMK", "Userprofile", new { id = @User.FindFirstValue("idNguoidung")})'" />
             </div>
-            <div>
-                <a asp-action="Index">Trở lại danh sách</a>
-            </div>
+           
         </form>
+
     </div>
 </div>
-
-@section scripts{
-    <script>
-        document.getElementById("Ngaybatdaulam").addEventListener("change", function () {
-            var startDate = new Date(this.value);
-            var today = new Date();
-            var yearsDiff = today.getFullYear() - startDate.getFullYear();
-            document.getElementById("Thamnien").value = yearsDiff;
-        });
-    </script>
-}

@@ -1,20 +1,21 @@
-﻿@model IEnumerable<QLGV_DTSoft.Data.BoPhan>
+﻿@using System.Security.Claims;
+@model IEnumerable<QLGV_DTSoft.Data.BoPhan>
 
 @{
-    ViewData["Title"] = "Danh sách các bộ phận có trong hệ thống";
+    var tenkhuvuc = User.FindFirstValue("tenKhuvuc");
+    ViewData["Title"] = "Danh sách các bộ phận có trong hệ thống của " +  tenkhuvuc;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<br />
 <p>
-    <a asp-action="Create" class="btn btn-success">Thêm mới bộ phận</a>
+    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
 </p>
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="header-title">
-                    
+                    @ViewData["Title"]
                 </div>
             </div>
             <div class="card-body">
@@ -51,7 +52,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdBp">Sửa</a> |
-                <a asp-action="Details" asp-route-id="@item.IdBp">Chi tiết</a> |
+                @*<a asp-action="Details" asp-route-id="@item.IdBp">Chi tiết</a> |*@
                 <a asp-action="Delete" asp-route-id="@item.IdBp">Xóa</a>
             </td>
         </tr>

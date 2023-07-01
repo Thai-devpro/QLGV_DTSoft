@@ -3,61 +3,74 @@
 @model IEnumerable<QLGV_DTSoft.Data.VaiTro>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách vai trò";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Danh sách vai trò</h1>
-
 <p>
-    <a asp-action="Create">Thêm mới</a>
+    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Tên vai trò
-            </th>
-            <th>
-                Mô tả
-            </th>
-            <th>
-               Quyền
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tenvaitro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mota)
-            </td>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    @ViewData["Title"]
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tên vai trò
+                                </th>
+                                <th>
+                                    Mô tả
+                                </th>
+                                <th>
+                                    Quyền
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tenvaitro)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Mota)
+                                    </td>
 
-                <td style="text-align: left">
-                    @if (item.CoQuyenTruyCaps.Count > 0)
-                    {
-                        DtsoftContext db = new DtsoftContext();
-                        var q = db.CoQuyenTruyCaps.Include(q => q.IdQuyenNavigation).Where(q => q.IdVt == item.IdVt);
-                        foreach (var q1 in q)
-                        {
-                            <span style="font-weight:bold">
-                                <i>*</i>@q1.IdQuyenNavigation.Tenquyen
-                            </span>
-                            <br />
-                        }
-                    }
+                                    <td style="text-align: left">
+                                        @if (item.CoQuyenTruyCaps.Count > 0)
+                                        {
+                                            DtsoftContext db = new DtsoftContext();
+                                            var q = db.CoQuyenTruyCaps.Include(q => q.IdQuyenNavigation).Where(q => q.IdVt == item.IdVt);
+                                            foreach (var q1 in q)
+                                            {
+                                                <span style="font-weight:bold">
+                                                    <i>*</i>@q1.IdQuyenNavigation.Tenquyen
+                                                </span>
+                                                <br />
+                                            }
+                                        }
 
-                </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVt">Chỉnh sửa</a> |
-                <a asp-action="Themquyen" asp-route-id="@item.IdVt">Phân quyền</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVt">Xóa</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.IdVt">Chỉnh sửa</a> |
+                                        <a asp-action="Themquyen" asp-route-id="@item.IdVt">Phân quyền</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.IdVt">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

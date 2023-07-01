@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QLGV_DTSoft.Data;
@@ -13,18 +14,15 @@ namespace QLGV_DTSoft.Controllers
     public class PhancongCongviecController : Controller
     {
         private readonly DtsoftContext _context;
+        private readonly INotyfService _toastNotification;
 
-        public PhancongCongviecController(DtsoftContext context)
+        public PhancongCongviecController(DtsoftContext context , INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
         public async Task<IActionResult> Index()
         {
-            /*var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 5 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
-            if (count == 0)
-            {
-                return RedirectToAction("norole", "Home");
-            }*/
 
             var bophanIdClaim = User.FindFirstValue("idBophan");
             var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
@@ -38,13 +36,14 @@ namespace QLGV_DTSoft.Controllers
             if (bophanId != null && khuvucId != null)
             {
                 // Truy vấn danh sách kế hoạch giao việc cho bộ phận của khu vực đó
-                var kehoachGiaoViec = await _context.KeHoachGiaoViecs.Include(u => u.IdBpNavigation).ThenInclude(uu => uu.IdKhuvucNavigation).Include(u => u.ThamGia)
+                var kehoachGiaoViec = await _context.KeHoachGiaoViecs.Include(u => u.IdBpNavigation).ThenInclude(uu => uu.IdKhuvucNavigation).Include(kh => kh.ChiTieus).Include(tg => tg.ThamGia).ThenInclude(tg => tg.IdNdNavigation)
                     .Where(kh => kh.IdBpNavigation.IdBp == bophanId && kh.IdBpNavigation.IdKhuvucNavigation.IdKhuvuc == khuvucId  )
                     .ToListAsync();
                 return View(kehoachGiaoViec);
             }
             return View();
         }
+
 
         [HttpGet]
         public async Task<IActionResult> AddtoPlan(int? id)
@@ -76,13 +75,12 @@ namespace QLGV_DTSoft.Controllers
                 .Where(tg => tg.IdKh == id)
                 .ToListAsync();
 
-            var dsIdThamGia = dsThamGia.Select(tg => tg.IdNd).ToList();
+           
 
             var viewModel = new AddToPlanViewModel
             {
                 KeHoachGiaoViec = keHoachGiaoViec,
                 DsNhanvien = dsNhanvien,
-                DsIdThamGia = dsIdThamGia,
                 ChiTieu = dsChiTieu
 
             };
@@ -125,15 +123,13 @@ namespace QLGV_DTSoft.Controllers
                         IdCt = selectedChiTieu
                     };
                     _context.ThamGia.Add(thamGia);
+                    
                 }
             }
-
             await _context.SaveChangesAsync();
+            _toastNotification.Information("Cập nhật thành viên thành công");
             return RedirectToAction("Index");
         }
-
-
-        
         [HttpGet]
         public async Task<IActionResult> EvaluateResult(int id)
         {
@@ -187,6 +183,8 @@ namespace QLGV_DTSoft.Controllers
 
             return View(viewModel);
         }
+
+        
 
     }
 }
