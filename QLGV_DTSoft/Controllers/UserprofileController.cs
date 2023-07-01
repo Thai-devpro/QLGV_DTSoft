@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using QLGV_DTSoft.Helper;
 
 namespace QLGV_DTSoft.Controllers
 {
+    [Authorize]
     public class UserprofileController : Controller
     {
         private readonly DtsoftContext _context;
