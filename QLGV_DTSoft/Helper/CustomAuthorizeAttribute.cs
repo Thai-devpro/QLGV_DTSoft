@@ -22,7 +22,8 @@ namespace QLGV_DTSoft.Helper
 
             if (!context.HttpContext.User.Identity?.IsAuthenticated == true)
             {
-                context.Result = new UnauthorizedResult();
+                var returnUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
+                context.Result = new RedirectToActionResult("Login", "Auth", new { returnUrl });
                 return;
             }
 

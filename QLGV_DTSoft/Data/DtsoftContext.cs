@@ -210,8 +210,7 @@ public partial class DtsoftContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("EMAIL");
             entity.Property(e => e.Gioitinh)
-                .HasMaxLength(20)
-                .IsUnicode(false)
+                .HasMaxLength(50)
                 .HasColumnName("GIOITINH");
             entity.Property(e => e.Hoten)
                 .HasMaxLength(255)

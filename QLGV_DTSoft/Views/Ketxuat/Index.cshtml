@@ -32,26 +32,31 @@
         <p><select name="kq" class="form-control" asp-items="@ViewBag.ketqua"></select></p>
         <p style="width:81px"><input type="submit" class="btb btn-success" value="Tìm kiếm" /></p>
     </form>
-    <p>
-        <form asp-action="Export" method="post" enctype="multipart/form-data" style="display: inline-block; margin-left: 10px;">
-            <input type="hidden" name="GridHtml" />
-            <input type="submit" value="Xuất File" id="btnSubmit" class="btn btn-success" />
-        </form>
-    </p>
+
+    <form asp-action="Export" method="post" enctype="multipart/form-data" style="display: inline-block; margin-left: 10px;">
+        <input type="hidden" name="GridHtml" />
+        <input type="submit" value="Xuất File Word" id="btnSubmit" class="btn btn-outline-primary mt-2" />
+    </form>
+
+    <form asp-action="ExportToPdf" method="post" enctype="multipart/form-data" style="display: inline-block; margin-left: 10px;">
+        <input type="hidden" name="GridHtml" />
+        <input type="submit" value="Xuất File PDF" id="btnSubmitPDF" class="btn btn-outline-secondary mt-2" />
+    </form>
+
 </div>
 <br />
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div id="Grid">
-                <div >
-                    <div >
+                <div class="card-header d-flex justify-content-between">
+                    <div class="header-title">
                         <h4 class="card-title">@ViewBag.tbkx</h4>
                     </div>
                 </div>
                 <div >
                     <div >
-                        <table style="width: 100%;">
+                        <table id="datatable" class="table" style="width: 100%">
                             <thead>
                                 <tr class="ligth">
                                     <th style=" border: 1px solid #dddddd;
@@ -63,7 +68,7 @@
                                     <th style=" border: 1px solid #dddddd;
                 text-align: center;
                 padding: 8px;">
-                                        Sô điện thoại
+                                        Số điện thoại
                                     </th>
 
                                     <th style=" border: 1px solid #dddddd;
@@ -115,6 +120,10 @@
 <script type="text/javascript">
     $(function () {
         $("#btnSubmit").click(function () {
+            $("input[name='GridHtml']").val($("#Grid").html());
+        });
+
+        $("#btnSubmitPDF").click(function () {
             $("input[name='GridHtml']").val($("#Grid").html());
         });
     });

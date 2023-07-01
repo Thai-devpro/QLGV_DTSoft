@@ -1,8 +1,35 @@
-﻿@model IEnumerable<QLGV_DTSoft.Data.KeHoachGiaoViec>
+﻿@using System.Security.Claims;
+@model IEnumerable<QLGV_DTSoft.Data.KeHoachGiaoViec>
 @{
     ViewData["Title"] = "Danh sách kế hoạch giao việc của bộ phận" + " " + ViewData["tenbophan"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .chitieu-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .chitieu-item {
+        margin-bottom: 10px;
+    }
+
+    .chitieu-name {
+        font-weight: bold;
+    }
+
+    .thanhvien-list {
+        list-style-type: none;
+        margin-top: 5px;
+        margin-left: 15px;
+    }
+
+    .thanhvien-item {
+        margin-bottom: 5px;
+    }
+
+</style>
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
@@ -28,13 +55,16 @@
                                 <th>
                                     Mô tả kế hoạch
                                 </th>
+                                <th>
+                                    Nhân viên được giao kế hoạch
+                                </th>
                                 <th class="text-center">
                                     Tổng số lượng đã hoàn thành
                                 </th>
-                                <th>
+                                <th class="text-center">
                                     Đánh giá tự động
                                 </th>
-                                <th></th>
+                                <th class="text-center">Thêm thành viên vào kế hoạch</th>
                             </tr>
 
                         </thead>
@@ -54,17 +84,68 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Motakh)
                                     </td>
+                                    <td>
+                                        <ul class="chitieu-list">
+                                            @foreach (var chiTieu in item.ChiTieus)
+                                            {
+                                                <li class="chitieu-item">
+                                                    <span class="chitieu-name">@chiTieu.Chitieu</span>
+                                                    <ul class="thanhvien-list">
+                                                        @foreach (var thanhVien in chiTieu.ThamGia)
+                                                        {
+                                                            <li class="thanhvien-item">@thanhVien.IdNdNavigation.Hoten</li>
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </td>
                                     <td class="text-center">
                                         @item.ThamGia.Sum(tg => tg.SlHoanthanh)
                                     </td>
-                                    <td>
-                                        <a class="btn bg-info-light" asp-action="EvaluateResult" asp-route-id="@item.IdKh"><i class="ri-eye-line"></i></a>
-                                    </td>
-                                    <td>
-                                        <a class="btn bg-secondary-light mr-3 btn-add" onclick="addToPlan(@item.IdKh)" data-target="#addToPlan" data-toggle="modal">Thêm thành viên</a>
-                                        
-                                    </td>
+                                    @{
+                                        if (User.Identity.IsAuthenticated)
+                                        {
+                                            
+                                            string idVaiTro = User.FindFirstValue("idvaitro");
+                                            int idVt = int.Parse(idVaiTro);
+
+                                            if (idVt != null)
+                                            {
+                                                if (idVt == 2)
+                                                {
+                                                    <td class="text-center">
+                                                        <a class="btn bg-warning" asp-action="EvaluateResult" asp-route-id="@item.IdKh"><i class="ri-edit-box-line m-0"></i></a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a class="btn bg-secondary-light mr-3" onclick="addToPlan(@item.IdKh)" data-target="#addToPlan" data-toggle="modal"><i class="ri-user-add-line"></i></a>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-center">
+                                                        <a class="btn bg-warning" asp-action="EvaluateResult" asp-route-id="@item.IdKh" disabled><i class="ri-edit-box-line m-0"></i></a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a class="btn bg-secondary-light mr-3" onclick="addToPlan(@item.IdKh)" data-target="#addToPlan" data-toggle="modal" disabled><i class="ri-user-add-line"></i></a>
+                                                    </td>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // Không tìm thấy claim "idvaitro"
+                                                // Xử lý khi không có claim "idvaitro" tại đây
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // Người dùng chưa đăng nhập
+                                            // Xử lý khi người dùng chưa đăng nhập tại đây
+                                        }
+                                    }
+                                   
                                 </tr>
+                                
                             }
                         </tbody>
 
@@ -86,6 +167,7 @@
         </div>
     </div>
 </div>
+
 @section scripts{
     <script>
         function addToPlan(id) {
@@ -102,6 +184,7 @@
                 }
             });
         }
+        
     </script>
 }
 

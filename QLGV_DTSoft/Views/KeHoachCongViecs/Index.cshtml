@@ -1,66 +1,78 @@
 ﻿@model IEnumerable<QLGV_DTSoft.Data.KeHoachCongViec>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách kế hoạch công việc";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Danh sách kế hoạch công việc</h1>
-<br />
 <p>
     <a asp-action="Create" class="btn btn-success">Thêm mới</a>
 </p>
-<div>
+<div class="mb-2">
     <form asp-action="Index" method="get" class="form-inline">
         <select name="NamthuchienFormatted" class="form-control" asp-items="@ViewBag.nth" onchange="this.form.submit()">
             
         </select>
     </form>
 </div>
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            @ViewData["Title"]
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="datatable" class="table data-table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Năm thực hiện
+                        </th>
+                        <th>
+                            Nội dung công việc
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NamthuchienFormatted)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Noidungcongviec)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.IdKhcv">Sửa</a> |
+                                @*<a asp-action="Details" asp-route-id="@item.IdKhcv">Chi tiết</a> |*@
+                                <a asp-action="Delete" asp-route-id="@item.IdKhcv">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-<script>
-    // Lấy thẻ select và đăng ký sự kiện onchange
-    var selectElement = document.querySelector('select[name="IdKhcv"]');
-    selectElement.addEventListener('change', function () {
-        // Lấy giá trị NamthuchienFormatted từ thuộc tính data-namthuchien của option được chọn
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var namthuchienFormatted = selectedOption.getAttribute('data-namthuchien');
+@section scripts{
+    <script>
+        // Lấy thẻ select và đăng ký sự kiện onchange
+        var selectElement = document.querySelector('select[name="IdKhcv"]');
+        selectElement.addEventListener('change', function () {
+            // Lấy giá trị NamthuchienFormatted từ thuộc tính data-namthuchien của option được chọn
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var namthuchienFormatted = selectedOption.getAttribute('data-namthuchien');
 
-        // Gán giá trị NamthuchienFormatted cho input ẩn có tên là 'NamthuchienFormatted'
-        document.querySelector('input[name="NamthuchienFormatted"]').value = namthuchienFormatted;
+            // Gán giá trị NamthuchienFormatted cho input ẩn có tên là 'NamthuchienFormatted'
+            document.querySelector('input[name="NamthuchienFormatted"]').value = namthuchienFormatted;
 
-        // Gửi form đi
-        this.form.submit();
-    });
-</script>
+            // Gửi form đi
+            this.form.submit();
+        });
+    </script>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Năm thực hiện
-            </th>
-            <th>
-               Nội dung công việc
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-            <tr>
-                <td>
-                @Html.DisplayFor(modelItem => item.NamthuchienFormatted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Noidungcongviec)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdKhcv">Sửa</a> |
-                <a asp-action="Details" asp-route-id="@item.IdKhcv">Chi tiết</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdKhcv">Xóa</a>
-            </td>
-        </tr>
 }
-    </tbody>
-</table>

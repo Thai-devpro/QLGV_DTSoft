@@ -4,7 +4,6 @@
     ViewData["Title"] = "Danh sách nhân viên trong khu vực";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<br />
 <p>
     <a asp-action="Create" class="btn btn-success">Thêm mới</a>
 </p>
@@ -13,7 +12,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="header-title">
-                    
+                    @ViewData["Title"] 
                 </div>
             </div>
             <div class="card-body">
@@ -32,7 +31,9 @@
                                 <th>
                                     Bộ phận làm việc
                                 </th>
-                                
+                                <th>
+                                    Chức vụ
+                                </th>
                                 <th></th>
                             </tr>
                             
@@ -52,7 +53,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.IdBpNavigation.Tenbophan)
                                 </td>
-                               
+                                 <td>
+                                    @Html.DisplayFor(modelItem => item.IdVtNavigation.Tenvaitro)
+                                 </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.IdNd">Sửa</a> |
                                     <a asp-action="Details" asp-route-id="@item.IdNd">Thông tin chi tiết</a> |

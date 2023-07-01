@@ -1,16 +1,16 @@
 ﻿@model QLGV_DTSoft.Data.KeHoachCongViec
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa kế hoạc công việc " + Model.NamthuchienFormatted;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Chỉnh sửa</h1>
-
-<h4>Kế hoạch công việc</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            <h4 class="card-title">@ViewData["Title"]</h4>
+        </div>
+    </div>
+    <div class="card-body">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdKhcv" />
@@ -25,13 +25,13 @@
                 <span asp-validation-for="Noidungcongviec" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Lưu" class="btn btn-primary" />
+                <input type="submit" value="Lưu" class="btn btn-success" />
+            </div>
+            <div>
+                <a asp-action="Index">Về danh sách</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Về danh sách</a>
-</div>
 

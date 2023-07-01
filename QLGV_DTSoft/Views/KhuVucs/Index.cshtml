@@ -1,54 +1,66 @@
 ﻿@model IEnumerable<QLGV_DTSoft.Data.KhuVuc>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách khu vực";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Danh sách khu vực</h1>
-
-<p>
-    <a asp-action="Create">Thêm mới</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-              Tên khu vực
-            </th>
-            <th>
-                Địa chỉ
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-              Số điện thoại
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tenkhuvuc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Diachi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sodienthoai)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdKhuvuc">Chỉnh sửa</a> |
-                <a asp-action="Details" asp-route-id="@item.IdKhuvuc">Chi tiết</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdKhuvuc">Xóa</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<a asp-action="Create" class="btn btn-success  mb-2">Thêm mới</a>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    @ViewData["Title"]
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tên khu vực
+                                </th>
+                                <th>
+                                    Địa chỉ
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Số điện thoại
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tenkhuvuc)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Diachi)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Sodienthoai)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.IdKhuvuc">Sửa</a> |
+                                        @*<a asp-action="Details" asp-route-id="@item.IdKhuvuc">Chi tiết</a> |*@
+                                        <a asp-action="Delete" asp-route-id="@item.IdKhuvuc">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

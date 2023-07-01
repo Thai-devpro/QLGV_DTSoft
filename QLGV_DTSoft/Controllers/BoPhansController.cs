@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,26 +17,28 @@ namespace QLGV_DTSoft.Controllers
     public class BoPhansController : Controller
     {
         private readonly DtsoftContext _context;
+        private readonly INotyfService _toastNotification;
 
-        public BoPhansController(DtsoftContext context)
+        public BoPhansController(DtsoftContext context , INotyfService toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
 
         // GET: BoPhans
         public async Task<IActionResult> Index()
         {
-            /*var count = _context.CoQuyenTruyCaps.Where(c => c.IdQuyen == 2 && c.IdVt == int.Parse(User.FindFirstValue("idvaitro"))).Count();
-            if (count == 0)
+            var loggedInUser = UserHelper.GetLoggedInUserKhuvucId(User);
+            if (loggedInUser.HasValue)
             {
-                return RedirectToAction("norole", "Home");
-            }*/
-
-            var khuvucIdClaim = User.FindFirstValue("idKhuvuc");
-            int? khuvucId = !string.IsNullOrEmpty(khuvucIdClaim) ? int.Parse(khuvucIdClaim) : null;
-            var dtsoftContext = _context.BoPhans.Include(b => b.IdKhuvucNavigation).Where(b => b.IdKhuvucNavigation.IdKhuvuc == khuvucId);
-
-            return View(await dtsoftContext.ToListAsync());
+                int khuvucId = loggedInUser.Value;
+                var dtsoftContext = _context.BoPhans.Include(b => b.IdKhuvucNavigation).Where(b => b.IdKhuvucNavigation.IdKhuvuc == khuvucId);
+                return View(await dtsoftContext.ToListAsync());
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // GET: BoPhans/Details/5
@@ -60,8 +63,25 @@ namespace QLGV_DTSoft.Controllers
         // GET: BoPhans/Create
         public IActionResult Create()
         {
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "Tenkhuvuc");
-            return View();
+
+            /*ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "Tenkhuvuc");
+            return View();*/
+            int? loggedInUserKhuvucId = UserHelper.GetLoggedInUserKhuvucId(User);
+
+            if (loggedInUserKhuvucId.HasValue)
+            {
+                int khuvucId = loggedInUserKhuvucId.Value;
+                var khuvuc = _context.KhuVucs.FirstOrDefault(k => k.IdKhuvuc == khuvucId);
+
+                if (khuvuc != null)
+                {
+                    ViewData["IdKhuvuc"] = new SelectList(new List<KhuVuc> { khuvuc }, "IdKhuvuc", "Tenkhuvuc");
+                    return View();
+                }
+            }
+
+            // Xử lý khi không tìm thấy ID khu vực hoặc khi không tìm thấy khu vực
+            return NotFound();
         }
 
         // POST: BoPhans/Create
@@ -75,6 +95,7 @@ namespace QLGV_DTSoft.Controllers
             {
                 _context.Add(boPhan);
                 await _context.SaveChangesAsync();
+                _toastNotification.Success("Thêm mới bộ phận " + boPhan.Tenbophan + " thành công");
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "Tenkhuvuc", boPhan.IdKhuvuc);
@@ -94,8 +115,20 @@ namespace QLGV_DTSoft.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "IdKhuvuc", boPhan.IdKhuvuc);
-            return View(boPhan);
+            int? loggedInUserKhuvucId = UserHelper.GetLoggedInUserKhuvucId(User);
+
+            if (loggedInUserKhuvucId.HasValue)
+            {
+                int khuvucId = loggedInUserKhuvucId.Value;
+                var khuvuc = _context.KhuVucs.FirstOrDefault(k => k.IdKhuvuc == khuvucId);
+
+                if (khuvuc != null)
+                {
+                    ViewData["IdKhuvuc"] = new SelectList(new List<KhuVuc> { khuvuc }, "IdKhuvuc", "Tenkhuvuc" , boPhan.IdKhuvuc);
+                    return View(boPhan);
+                }
+            }
+            return NotFound();
         }
 
         // POST: BoPhans/Edit/5
@@ -116,6 +149,7 @@ namespace QLGV_DTSoft.Controllers
                 {
                     _context.Update(boPhan);
                     await _context.SaveChangesAsync();
+                    _toastNotification.Success("Cập nhật " + boPhan.Tenbophan + " thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -130,7 +164,7 @@ namespace QLGV_DTSoft.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "IdKhuvuc", boPhan.IdKhuvuc);
+            ViewData["IdKhuvuc"] = new SelectList(_context.KhuVucs, "IdKhuvuc", "Tenkhuvuc", boPhan.IdKhuvuc);
             return View(boPhan);
         }
 
@@ -169,6 +203,7 @@ namespace QLGV_DTSoft.Controllers
             }
             
             await _context.SaveChangesAsync();
+            _toastNotification.Information("Xóa " + boPhan.Tenbophan + " thành công");
             return RedirectToAction(nameof(Index));
         }
 

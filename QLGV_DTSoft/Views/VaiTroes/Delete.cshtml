@@ -1,16 +1,18 @@
 ﻿@model QLGV_DTSoft.Data.VaiTro
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa vai trò";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Xóa</h1>
-
 <h3>Bạn có chắc muốn xóa?</h3>
-<div>
-    <h4>Vai trò</h4>
-    <hr />
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+    </div>
+    <div class="card-body">
+
     <dl class="row">
         <dt class = "col-sm-2">
             Tên vai trò
@@ -31,4 +33,5 @@
         <input type="submit" value="Xóa" class="btn btn-danger" /> |
         <a asp-action="Index">Về danh sách</a>
     </form>
+</div>
 </div>

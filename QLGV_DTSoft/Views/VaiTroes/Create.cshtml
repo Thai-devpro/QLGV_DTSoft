@@ -1,16 +1,17 @@
 ﻿@model QLGV_DTSoft.Data.VaiTro
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm mới vai trò";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Thêm mới</h1>
-
-<h4>Vai trò</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            <h4 class="card-title">@ViewData["Title"]</h4>
+        </div>
+    </div>
+    <div class="card-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -24,13 +25,14 @@
                 <span asp-validation-for="Mota" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Thêm" class="btn btn-primary" />
+                <input type="submit" value="Thêm" class="btn btn-success" />
+            </div>
+
+            <div>
+                <a asp-action="Index">Về danh sách</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Về danh sách</a>
-</div>
 

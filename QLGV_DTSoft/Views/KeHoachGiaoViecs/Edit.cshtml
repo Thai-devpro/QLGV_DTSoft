@@ -62,7 +62,7 @@
                 <div class="col-4">
                     <label class="control-label">Chỉ tiêu</label>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <label class="control-label">Doanh số</label>
                 </div>
                 <div class="col-4">
@@ -72,21 +72,23 @@
             <div class="row">
                 <div class="col-4">
                     <div class="form-group">
-                     
-                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'doanhso-input')" />
+
+                        <input class="form-control" type="text" id="chitieu-input" placeholder="Nhập chỉ tiêu" onkeydown="checkEnter(event, 'doanhso-input')" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để tiếp tục" />
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                      
-                        <input class="form-control" type="number" id="doanhso-input" placeholder="Nhập doanh số" onkeydown="checkEnter(event, 'dvt-input')" disabled />
+
+                        <input class="form-control" type="number" id="doanhso-input" placeholder="Nhập doanh số" onkeydown="checkEnter(event, 'dvt-input')" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để tiếp tục" disabled />
+
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="form-group">
-                
-                        <input class="form-control" type="text" id="dvt-input" placeholder="Nhập đơn vị tính" onkeydown="addChitieu(event)" disabled />
+
+                        <input class="form-control" type="text" id="dvt-input" placeholder="Nhập đơn vị tính" onkeydown="addChitieu(event)" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm chỉ tiêu mới" disabled />
+
                     </div>
                 </div>
             </div>
@@ -119,8 +121,6 @@
                     }
                 }
             </div>
-            
-
 
             <input type="hidden" id="chitieu-list-input" name="chitieuList" />
 
@@ -129,6 +129,7 @@
         </form>
     </div>
 </div>
+
 @*Modal xóa*@
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -152,6 +153,12 @@
 
 @section scripts{
     <script>
+
+        document.getElementById("chitieu-input").addEventListener("focus", function () {
+            this.setAttribute("data-toggle", "tooltip");
+            $(this).tooltip("show");
+        });
+
         function sendDataToController() {
             const chitieuList = [];
 
@@ -202,6 +209,7 @@
                 event.preventDefault();
                 document.getElementById(nextInputId).disabled = false;
                 document.getElementById(nextInputId).focus();
+
             }
         }
 
@@ -259,8 +267,6 @@
             }
         }
               
-
-
         function showConfirmationModal(chitieuId) {
             // Thiết lập giá trị của thuộc tính data-chitieu-id trong modal
             $("#confirmationModal").attr("data-chitieu-id", chitieuId);
@@ -282,7 +288,6 @@
                 }
             });
         });
-
 
     </script>
 }

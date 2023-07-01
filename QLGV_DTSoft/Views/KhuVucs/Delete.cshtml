@@ -1,46 +1,43 @@
 ﻿@model QLGV_DTSoft.Data.KhuVuc
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa " + Model.Tenkhuvuc;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h3>Bạn có chắc chắn muốn xóa @Model.Tenkhuvuc ?</h3>
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-2">
+                Tên khu vực
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Tenkhuvuc)
+            </dd>
+            <dt class="col-sm-2">
+                Địa chỉ
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Diachi)
+            </dd>
+            <dt class="col-sm-2">
+                Email
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-2">
+                Số điện thoại
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Sodienthoai)
+            </dd>
+        </dl>
 
-<h1>Xóa</h1>
-
-<h3>Bạn có chắc chắn muốn xóa?</h3>
-<div>
-    <h4>Khu vực</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Tên khu vực
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tenkhuvuc)
-        </dd>
-        <dt class="col-sm-2">
-            Địa chỉ
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Diachi)
-        </dd>
-        <dt class="col-sm-2">
-            Email
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            Số điện thoại
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Sodienthoai)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="IdKhuvuc" />
-        <input type="submit" value="Xóa" class="btn btn-danger" /> |
-        <a asp-action="Index">Về danh sách</a>
-    </form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="IdKhuvuc" />
+            <input type="submit" value="Xóa" class="btn btn-danger" /> |
+            <a asp-action="Index">Về danh sách</a>
+        </form>
+    </div>
 </div>

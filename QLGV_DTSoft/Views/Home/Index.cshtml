@@ -51,16 +51,26 @@
                                                 </div>
                                             </div>
                                             <div class="media align-items-center">
-                                                <button type="button" class="btn bg-secondary-light mr-3" data-toggle="modal" data-target="#updateProgressModal_@congviecduocgiao.IdKh">Cập nhật tiến độ</button>
-                                                <a class="btn bg-secondary-light" data-toggle="collapse" href="#collapseEdit1" role="button" aria-expanded="false" aria-controls="collapseEdit1"><i class="ri-edit-box-line m-0"></i></a>
+                                                <button type="button" class="btn bg-secondary-light mr-3" data-toggle="modal" data-target="#updateProgressModal_@congviecduocgiao.IdKh"><i class="ri-add-line"></i> Cập nhật tiến độ</button>
+                                                <a class="btn bg-secondary-light evaluation-btn" data-toggle="modal" data-target="#evaluationModal" data-idkh="@congviecduocgiao.IdKh">
+                                                    <i class="ri-edit-box-line m-0"></i> Xem đánh giá
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="modal fade bd-example-modal-lg" id="evaluationModal" tabindex="-1" role="dialog" aria-labelledby="evaluationModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <!-- Nội dung partial view sẽ được hiển thị ở đây -->
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Modal Cập nhật tiến độ -->
-                            <div class="modal fade" id="updateProgressModal_@congviecduocgiao.IdKh" tabindex="-1" role="dialog" aria-labelledby="updateProgressModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                            <div class="modal fade bd-example-modal-lg" id="updateProgressModal_@congviecduocgiao.IdKh" tabindex="-1" role="dialog" aria-labelledby="updateProgressModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="updateProgressModalLabel">Cập nhật tiến độ</h5>
@@ -74,6 +84,7 @@
 
                                                 @foreach (var chitieu in congviecduocgiao.ChiTieus)
                                                 {
+
                                                     <div class="form-group">
                                                         <label>Tiến độ hoàn thành (@chitieu.Chitieu):</label>
                                                         <input type="hidden" name="idCt[@chitieu.IdCt]" value="@chitieu.IdCt" />
@@ -83,7 +94,7 @@
 
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
                                                 </div>
                                             </form>
 
@@ -107,6 +118,24 @@
 </div>
 @section scripts{
     <script>
+        $(document).ready(function () {
+            $('.evaluation-btn').click(function () {
+                var idKh = $(this).data('idkh');
+                var url = '/Home/GetEvaluation/' + idKh;
 
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (result) {
+
+                        $('#evaluationModal .modal-content').html(result);
+                        $('#evaluationModal').modal('show');
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            });
+        });
     </script>
 }
