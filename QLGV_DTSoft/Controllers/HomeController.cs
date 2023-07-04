@@ -87,6 +87,21 @@ namespace QLGV_DTSoft.Controllers
                 .Where(ct => ct.IdKh == id)
                 .ToListAsync();
 
+
+            foreach (var chiTieu in chiTieuDs)
+            {
+                var thamGia = await _context.ThamGia
+                    .FirstOrDefaultAsync(tg => tg.IdKh == id && tg.IdCt == chiTieu.IdCt && tg.IdNd == idnd);
+
+                if (thamGia != null)
+                {
+                    thamGia.Danhgia = CalculateDanhGia(thamGia.SlHoanthanh, chiTieu.Doanhso);
+                    _context.ThamGia.Update(thamGia);
+                }
+                await _context.SaveChangesAsync();
+ 
+            }
+
             var evaluationResults = new List<EvaluationResultById>();
 
             foreach (var chiTieu in chiTieuDs)
@@ -121,6 +136,25 @@ namespace QLGV_DTSoft.Controllers
         {
             
             return View();
+        }
+
+        private string CalculateDanhGia(int? slHoanThanh, int? doanhSo)
+        {
+            if (slHoanThanh.HasValue)
+            {
+                double tiLeHoanThanh = ((double)slHoanThanh.Value / (double)doanhSo) * 100;
+
+                if (tiLeHoanThanh >= 100)
+                    return "Đạt";
+                else if (tiLeHoanThanh >= 75)
+                    return "Chưa đạt";
+                else
+                    return "Không đạt";
+            }
+            else
+            {
+                return "Không đạt";
+            }
         }
     }
 }
