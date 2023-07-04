@@ -49,7 +49,7 @@ namespace QLGV_DTSoft.Controllers
                 var nguoiDung2 = _context.NguoiDungs.AsNoTracking().SingleOrDefault(n => n.IdNd == id);
                 nguoiDung.IdVt = nguoiDung2.IdVt;
                 nguoiDung.IdBp = nguoiDung2.IdBp;
-
+                nguoiDung.Tennguoidung = nguoiDung2.Tennguoidung;
                 nguoiDung.Ngaybatdaulam = nguoiDung2.Ngaybatdaulam;
                 nguoiDung.Thamnien = nguoiDung2.Thamnien;
 
